@@ -6,30 +6,42 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>IniciarSesion</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>Notaría 85</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="~/css/IniciarSesion.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="main">
 
-    <div class="container mt-5 pt-5">
 
-        <div class="row justify-content-center">
-            <div class="col-12 col-xl-4 col-md-6">
-
-                <div class="card">
-                    <div class="card-header">
-                        Iniciar Sesion
-                    </div>
-                    <div class="card-body">
+        <div class="container">
+            <center>
+                <div class="middle">
+                    <div id="login">
 
                         <form asp-controller="Login" asp-action="IniciarSesion" method="post">
 
-                            <input class="form-control mb-3" type="text" placeholder="Correo" required name="correo" />
-                            <input class="form-control mb-3" type="password" placeholder="Contraseña" required name="clave" />
-                            <div class="d-grid gap-2 mb-3">
-                                <button class="btn btn-primary" type="submit">Iniciar Sesion</button>
-                            </div>
+                            <fieldset class="clearfix">
+
+                                <p><span class="fa fa-user"></span><input type="text" placeholder="Correo" required name="correo"></p> <!-- JS because of IE support; better: placeholder="Username" -->
+                                <p><span class="fa fa-lock"></span><input type="password" placeholder="Contraseña" required name="clave"></p> <!-- JS because of IE support; better: placeholder="Password" -->
+
+                                <div>
+                                    <span style="width:48%; text-align:left;  display: inline-block;">
+                                        <a class="small-text" href="#">
+                                            Olvidaste tu
+                                            contraseña?
+                                        </a>
+                                    </span>
+                                    <span style="width:50%; text-align:right;  display: inline-block;"><input type="submit" value="Iniciar Sesion"></span>
+                                </div>
+
+                            </fieldset>
+                            <div class="clearfix"></div>
                             @if (ViewData["Mensaje"] != null)
                             {
 
@@ -41,19 +53,23 @@
                             }
                             ¿No tienes una cuenta? <a href="@Url.Action("Registro","Login")"> Registraste!</a>
 
+
                         </form>
 
+                        <div class="clearfix"></div>
+
+                    </div> <!-- end login -->
+                    <div class="logo">
+                        <img src="~/img/images.jpeg" alt="Logonotaría">
+
+                        <div class="clearfix"></div>
                     </div>
 
                 </div>
-
-            </div>
+            </center>
         </div>
 
     </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
