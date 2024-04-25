@@ -29,15 +29,26 @@ namespace ProyectoLogin.Controllers
         [HttpPost]
         public async Task<IActionResult> Registro(Usuario usuario, IFormFile Imagen)
         {
+            // Check if email address already exists
+            Usuario usuarioExistente = await _usuarioService.GetUsuarioPorCorreo(usuario.Correo);
+
+            if (usuarioExistente != null)
+            {
+                ViewData["Mensaje"] = "Ya existe un usuario registrado con ese correo electrónico.";
+                return View(); // Return view with error message
+            }
+
+            // Process image and password as before
             Stream image = Imagen.OpenReadStream();
             string urlImagen = await _filesService.SubirArchivo(image, Imagen.FileName);
 
             usuario.Clave = Utilidades.EncriptarClave(usuario.Clave);
             usuario.URLFotoPerfil = urlImagen;
 
+            // Save user
             Usuario usuarioCreado = await _usuarioService.SaveUsuario(usuario);
 
-            if(usuarioCreado.Id > 0)
+            if (usuarioCreado.Id > 0)
             {
                 return RedirectToAction("IniciarSesion", "Login");
             }

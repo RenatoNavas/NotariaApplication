@@ -20,11 +20,25 @@ namespace ProyectoLogin.Services
             return usuario;
         }
 
+        public async Task<Usuario> GetUsuarioPorCorreo(string correo)
+        {
+            if (string.IsNullOrEmpty(correo))
+            {
+                throw new ArgumentNullException(nameof(correo), "Correo electrónico no puede ser vacío o nullo.");
+            }
+
+            List<Usuario> usuarios = await _context.Usuarios.ToListAsync();
+            Usuario usuario = usuarios.FirstOrDefault(u => u.Correo.Equals(correo, StringComparison.OrdinalIgnoreCase));
+
+            return usuario;
+        }
+
         public async Task<Usuario> SaveUsuario(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
             return usuario;
         }
+
     }
 }
