@@ -17,7 +17,7 @@ namespace ProyectoLogin
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<UsuarioContext>(o =>
             {
-                o.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
+                o.UseNpgsql(builder.Configuration.GetConnectionString("CadenaSQL"));
             });
             builder.Services.AddScoped<IUsuarioService, UsuarioService>();
             builder.Services.AddScoped<IFilesService, FilesService>();

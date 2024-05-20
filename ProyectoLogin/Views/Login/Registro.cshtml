@@ -3,62 +3,82 @@
     Layout = null;
 }
 
-
-
 <!DOCTYPE html>
-
-<html>
+<html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrarse Notaría 85</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <style>
+        body {
+            background-color: #e8f1f2;
+        }
+
+        .main {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .card {
+            border: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #00173d;
+            border-color: #00173d;
+        }
+
+        .form-control, .btn {
+            border-radius: 0;
+        }
+    </style>
 </head>
 <body>
-
-
-    <div class="container mt-5 pt-5">
-
+    <div class="container main">
         <div class="row justify-content-center">
-            <div class="col-12 col-xl-4 col-md-6">
-
+            <div class="col-md-5">
                 <div class="card">
-                    <div class="card-header">
-                        Registrate
-                    </div>
                     <div class="card-body">
-
-                        <form asp-controller="Login" asp-action="Registro" method="post" enctype="multipart/form-data">
-
-                            <input class="form-control mb-3" type="text" placeholder="Nombre Completo" asp-for="NombreUsuario" required />
-                            <input class="form-control mb-3" type="text" placeholder="Correo" required asp-for="Correo" />
-                            <input class="form-control mb-3" type="password" placeholder="Contraseña" required asp-for="Clave" />
-                            <input type="file" class="form-control mb-3" name="Imagen">
-                            <div class="d-grid gap-2 mb-3">
-                                <button class="btn btn-primary" type="submit">Registrate</button>
+                        <div class="text-center mt-1">
+                            <img src="~/img/images.jpeg" alt="Logo Notaría">
+                        </div>
+                        <form method="post" asp-controller="Login" asp-action="Registro" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="nombreUsuario"><span class="fa fa-user"></span> Nombre Completo</label>
+                                <input type="text" class="form-control" id="nombreUsuario" placeholder="Ingrese su nombre completo" required name="NombreUsuario">
                             </div>
+                            <div class="form-group">
+                                <label for="correo"><span class="fa fa-envelope"></span> Correo Electrónico</label>
+                                <input type="text" class="form-control" id="correo" placeholder="Ingrese su correo" required name="Correo">
+                            </div>
+                            <div class="form-group">
+                                <label for="clave"><span class="fa fa-lock"></span> Contraseña</label>
+                                <input type="password" class="form-control" id="clave" placeholder="Ingrese su contraseña" required name="Clave">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-block">Regístrate</button>
+                                <br />
+                            </div>
+                            <div class="text-center mt-2">
+                                ¿Ya tienes una cuenta? <a href="@Url.Action("IniciarSesion","Login")">Iniciar sesión</a>
+                            </div>
+                            <br />
                             @if (ViewData["Mensaje"] != null)
                             {
-
-                                <div class="form-group">
-                                    <div class="alert alert-danger" role="alert">
-                                        @ViewData["Mensaje"]
-                                    </div>
+                                <div class="alert alert-danger" role="alert">
+                                    @ViewData["Mensaje"]
                                 </div>
                             }
-                            ¿Ya tienes una cuenta? <a href="@Url.Action("IniciarSesion","Login")"> Iniciar Sesion</a>
-
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
-
     </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

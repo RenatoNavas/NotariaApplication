@@ -1,74 +1,80 @@
-﻿@{
+﻿@model ProyectoLogin.Models.Usuario
+@{
     Layout = null;
 }
-
 <!DOCTYPE html>
-
-<html>
+<html lang="es">
 <head>
-    <title>Notaría 85</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Notaría 85</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link href="~/css/IniciarSesion.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #e8f1f2; 
+        }
+
+        .main {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .card {
+            border: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #00173d;
+            border-color: #00173d;
+        }
+
+        .form-control, .btn {
+            border-radius: 0;
+        }
+
+        .card img {
+            width: 50%; 
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <div class="main">
-
-
-        <div class="container">
-            <center>
-                <div class="middle">
-                    <div id="login">
-
-                        <form asp-controller="Login" asp-action="IniciarSesion" method="post">
-
-                            <fieldset class="clearfix">
-
-                                <p><span class="fa fa-user"></span><input type="text" placeholder="Correo" required name="correo"></p> <!-- JS because of IE support; better: placeholder="Username" -->
-                                <p><span class="fa fa-lock"></span><input type="password" placeholder="Contraseña" required name="clave"></p> <!-- JS because of IE support; better: placeholder="Password" -->
-
-                                <div>
-                                    <span style="width:48%; text-align:left;  display: inline-block;">
-                                        <a class="small-text" href="#">
-                                            Olvidaste tu
-                                            contraseña?
-                                        </a>
-                                    </span>
-                                    <span style="width:50%; text-align:right;  display: inline-block;"><input type="submit" value="Iniciar Sesion"></span>
-                                </div>
-
-                            </fieldset>
-                            <div class="clearfix"></div>
-                            @if (ViewData["Mensaje"] != null)
-                            {
-
-                                <div class="form-group">
-                                    <div class="alert alert-danger" role="alert">
-                                        @ViewData["Mensaje"]
-                                    </div>
-                                </div>
-                            }
-                            ¿No tienes una cuenta? <a href="@Url.Action("Registro","Login")"> Registraste!</a>
-
-
+    <div class="container main">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center mt-1">
+                            <img src="~/img/images.jpeg" alt="Logo Notaría">
+                        </div>
+                        <form method="post" asp-controller="Login" asp-action="IniciarSesion">
+                            <div class="form-group">
+                                <label for="correo"><span class="fa fa-user"></span> Correo Electrónico</label>
+                                <input type="text" class="form-control" id="correo" placeholder="Ingrese su correo" required name="correo">
+                            </div>
+                            <div class="form-group">
+                                <label for="clave"><span class="fa fa-lock"></span> Contraseña</label>
+                                <input type="password" class="form-control" id="clave" placeholder="Ingrese su contraseña" required name="clave">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                                <br />
+                                <a href="#" class="small-text">¿Olvidaste tu contraseña?</a>
+                            </div>
+                            <br />
+                            <div class="text-center mt-2">
+                                ¿No tienes una cuenta? <a href="@Url.Action("Registro","Login")">Regístrate</a>
+                            </div>
+                            <br />
                         </form>
-
-                        <div class="clearfix"></div>
-
-                    </div> <!-- end login -->
-                    <div class="logo">
-                        <img src="~/img/images.jpeg" alt="Logonotaría">
-
-                        <div class="clearfix"></div>
                     </div>
-
                 </div>
-            </center>
+            </div>
         </div>
-
     </div>
 </body>
 </html>
