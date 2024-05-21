@@ -105,7 +105,15 @@ namespace ProyectoLogin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult OlvidarContraseña()
+        {
+            return View();
+        }
 
+        public IActionResult RestablecerContraseña()
+        {
+            return View();
+        }
 
 
 
