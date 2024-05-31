@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Materializacion";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materialización</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4em;
+            color: #333;
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"] {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        button {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>MATERIALIZACIÓN</h1>
+    <div class="form-group">
+        <label for="document-upload">Tienes documentos que deseas materializar, por favor insértalo aquí:</label>
+        <input type="file" id="document-upload" multiple>
+    </div>
+    <div class="form-group">
+        <label><input type="radio" name="delivery-option" value="notaria"> Desea retirar sus documentos en la Notaría</label>
+        <label><input type="radio" name="delivery-option" value="servientrega"> Desea que se envíen los documentos por ServiEntrega</label>
+    </div>
+    <button onclick="generateProforma()">Generar Proforma</button>
+    <div id="message"></div>
+
+    <script>
+        function generateProforma() {
+            document.getElementById("message").textContent = "Su proforma está siendo generada, en las próximas horas un funcionario se comunicarán con usted.";
+        }
+    </script>
+</body>
+</html>
