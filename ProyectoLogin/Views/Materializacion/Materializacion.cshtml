@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Materializacion";
 }
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -49,25 +50,134 @@
             font-size: 1.2em;
             color: green;
         }
+
+        #documents-table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+            #documents-table th, #documents-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            #documents-table th {
+                background-color: #f2f2f2;
+            }
+
+        #delivery-form {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #delivery-details {
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <h1>MATERIALIZACIÓN</h1>
     <div class="form-group">
         <label for="document-upload">Tienes documentos que deseas materializar, por favor insértalo aquí:</label>
-        <input type="file" id="document-upload" multiple>
+        <input type="file" id="document-upload" multiple onchange="addDocuments()">
     </div>
     <div class="form-group">
-        <label><input type="radio" name="delivery-option" value="notaria"> Desea retirar sus documentos en la Notaría</label>
-        <label><input type="radio" name="delivery-option" value="servientrega"> Desea que se envíen los documentos por ServiEntrega</label>
+        <label><input type="radio" name="delivery-option" value="notaria" onclick="toggleDeliveryForm()"> Desea retirar sus documentos en la Notaría</label>
+        <label><input type="radio" name="delivery-option" value="servientrega" onclick="toggleDeliveryForm()"> Desea que se envíen los documentos por ServiEntrega</label>
     </div>
+
+    <table id="documents-table">
+        <thead>
+            <tr>
+                <th>Documento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div id="delivery-form">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre">
+        </div>
+        <div class="form-group">
+            <label for="direccion">Dirección de entrega:</label>
+            <input type="text" id="direccion">
+        </div>
+        <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono">
+        </div>
+        <button onclick="saveDeliveryDetails()">Guardar</button>
+    </div>
+
+    <div id="delivery-details"></div>
+
     <button onclick="generateProforma()">Generar Proforma</button>
     <div id="message"></div>
 
     <script>
+        function addDocuments() {
+            const fileInput = document.getElementById('document-upload');
+            const tableBody = document.querySelector('#documents-table tbody');
+
+            for (const file of fileInput.files) {
+                const row = document.createElement('tr');
+
+                const fileNameCell = document.createElement('td');
+                fileNameCell.textContent = file.name;
+                row.appendChild(fileNameCell);
+
+                const actionsCell = document.createElement('td');
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Eliminar';
+                deleteButton.onclick = function () {
+                    tableBody.removeChild(row);
+                };
+                actionsCell.appendChild(deleteButton);
+                row.appendChild(actionsCell);
+
+                tableBody.appendChild(row);
+            }
+        }
+
+        function toggleDeliveryForm() {
+            const deliveryForm = document.getElementById('delivery-form');
+            const selectedOption = document.querySelector('input[name="delivery-option"]:checked').value;
+
+            if (selectedOption === 'servientrega') {
+                deliveryForm.style.display = 'block';
+            } else {
+                deliveryForm.style.display = 'none';
+            }
+        }
+
+        function saveDeliveryDetails() {
+            const nombre = document.getElementById('nombre').value;
+            const direccion = document.getElementById('direccion').value;
+            const telefono = document.getElementById('telefono').value;
+            const deliveryDetails = document.getElementById('delivery-details');
+
+            deliveryDetails.innerHTML = `
+                        <h3>Detalles de Entrega</h3>
+                        <p><strong>Nombre:</strong> ${nombre}</p>
+                        <p><strong>Dirección de entrega:</strong> ${direccion}</p>
+                        <p><strong>Teléfono:</strong> ${telefono}</p>
+                    `;
+
+            deliveryDetails.style.display = 'block';
+        }
+
         function generateProforma() {
-            document.getElementById("message").textContent = "Su proforma está siendo generada, en las próximas horas un funcionario se comunicarán con usted.";
+            document.getElementById("message").textContent = "Su proforma está siendo generada, en las próximas horas un funcionario se comunicará con usted.";
         }
     </script>
 </body>
 </html>
+
