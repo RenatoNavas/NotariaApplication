@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoLogin.Models;
 
 public partial class Proceso
 {
-    public long ProId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
-    public int UsucliId { get; set; }
+    public int TipoProcesoId { get; set; }
 
-    public int FacId { get; set; }
+    public int ArchivoId { get; set; }
 
-    public int ArchId { get; set; }
+    public int UsuarioClienteId { get; set; }
 
-    public int TipId { get; set; }
+    public DateOnly? FechaCreacion { get; set; }
 
-    public DateOnly? ProFechaCreacion { get; set; }
+    public string? Estado { get; set; }
 
-    public string? ProEstado { get; set; }
+    public DateOnly? FechaFinalizacion { get; set; }
 
-    public DateOnly? ProFechaFinalizacion { get; set; }
+    public string? Observacion { get; set; }
 
-    public string? ProObservacion { get; set; }
-
-    public bool? ProEnvio { get; set; }
+    public bool? Envio { get; set; }
 
     public virtual Archivo Arch { get; set; } = null!;
 
     public virtual ICollection<Cotizacion> Cotizacions { get; set; } = new List<Cotizacion>();
-
-    public virtual Factura Fac { get; set; } = null!;
 
     public virtual ICollection<Factura> Facturas { get; set; } = new List<Factura>();
 

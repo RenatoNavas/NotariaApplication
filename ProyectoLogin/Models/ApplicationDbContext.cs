@@ -1,326 +1,266 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-
-namespace ProyectoLogin.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProyectoLogin.Models;
 
 public partial class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext()
-    {
-    }
-
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
     public virtual DbSet<Archivo> Archivos { get; set; }
-
     public virtual DbSet<Cotizacion> Cotizacions { get; set; }
-
     public virtual DbSet<Factura> Facturas { get; set; }
-
-    public virtual DbSet<Opcione> Opciones { get; set; }
-
+    public virtual DbSet<Opcion> Opciones { get; set; }
     public virtual DbSet<Permiso> Permisos { get; set; }
-
     public virtual DbSet<Proceso> Procesos { get; set; }
-
     public virtual DbSet<TipoProceso> TipoProcesos { get; set; }
-
-    public virtual DbSet<Usuario> Usuarios { get; set; }
-
     public virtual DbSet<UsuarioCliente> UsuarioClientes { get; set; }
-
-    public virtual DbSet<UsuarioNotarium> UsuarioNotaria { get; set; }
+    public virtual DbSet<UsuarioNotaria> UsuarioNotaria { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Database=NotariaDb;Port=5432;Username=postgres;Password=2001pizza;");
+        optionsBuilder.UseNpgsql("Host=localhost;Database=NotariaDb;Port=5432;Username=postgres;Password=2001pizza;");
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Archivo>(entity =>
         {
-            entity.HasKey(e => e.ArchId).HasName("pk_archivo");
+            entity.HasKey(e => e.Id).HasName("archivo_pkey");
 
-            entity.ToTable("Archivo");
+            entity.ToTable("archivo");
 
-            entity.HasIndex(e => e.ArchId, "archivo_pk").IsUnique();
+            entity.Property(e => e.Id)
+            .HasColumnName("Id")
+            .UseIdentityColumn();
 
-            entity.Property(e => e.ArchId)
-                .ValueGeneratedNever()
-                .HasColumnName("arch_id");
-            entity.Property(e => e.ArchDireccion)
+            entity.Property(e => e.Direccion)
                 .HasMaxLength(250)
-                .HasColumnName("arch_direccion");
-            entity.Property(e => e.ArchDocumento)
+                .HasColumnName("Direccion");
+            entity.Property(e => e.Documento)
                 .HasMaxLength(250)
-                .HasColumnName("arch_documento");
-            entity.Property(e => e.ArchFechaOtorgamiento).HasColumnName("arch_fecha_otorgamiento");
-            entity.Property(e => e.ArchPersonaEntrega)
+                .HasColumnName("Documento");
+            entity.Property(e => e.FechaOtorgamiento).HasColumnName("FechaOtorgamiento");
+            entity.Property(e => e.PersonaEntrega)
                 .HasMaxLength(50)
-                .HasColumnName("arch_persona_entrega");
-            entity.Property(e => e.ArchTelefono)
+                .HasColumnName("PersonaEntrega");
+            entity.Property(e => e.Telefono)
                 .HasMaxLength(50)
-                .HasColumnName("arch_telefono");
-            entity.Property(e => e.ArchTipoActo)
+                .HasColumnName("Telefono");
+            entity.Property(e => e.TipoActo)
                 .HasMaxLength(250)
-                .HasColumnName("arch_tipo_acto");
+                .HasColumnName("TipAacto");
         });
 
         modelBuilder.Entity<Cotizacion>(entity =>
         {
-            entity.HasKey(e => e.CotId).HasName("pk_cotizacion");
+            entity.HasKey(e => e.Id).HasName("cotizacion_pkey");
 
-            entity.ToTable("Cotizacion");
+            entity.ToTable("cotizacion");
 
-            entity.HasIndex(e => e.CotId, "cotizacion_pk").IsUnique();
-
-            entity.HasIndex(e => e.UsunotId, "crea_fk");
-
-            entity.HasIndex(e => e.ProId, "tener_fk");
-
-            entity.Property(e => e.CotId)
-                .ValueGeneratedNever()
-                .HasColumnName("cot_id");
-            entity.Property(e => e.CotAceptacion).HasColumnName("cot_aceptacion");
-            entity.Property(e => e.CotDocumento)
+            entity.Property(e => e.Id).HasColumnName("Id").UseIdentityColumn();
+            entity.Property(e => e.Aceptacion).HasColumnName("Aceptacion");
+            entity.Property(e => e.Documento)
                 .HasMaxLength(250)
-                .HasColumnName("cot_documento");
-            entity.Property(e => e.CotFecha).HasColumnName("cot_fecha");
-            entity.Property(e => e.CotValorTotal).HasColumnName("cot_valor_total");
-            entity.Property(e => e.ProId).HasColumnName("pro_id");
-            entity.Property(e => e.UsunotId).HasColumnName("usunot_id");
+                .HasColumnName("Documento");
+            entity.Property(e => e.Fecha).HasColumnName("Fecha");
+            entity.Property(e => e.ValorTotal).HasColumnName("ValorTotal");
+            entity.Property(e => e.ProcesoId).HasColumnName("ProcesoId");
+            entity.Property(e => e.UsuarioNotariaId).HasColumnName("UsuarioNotariaId");
 
             entity.HasOne(d => d.Pro).WithMany(p => p.Cotizacions)
-                .HasForeignKey(d => d.ProId)
+                .HasForeignKey(d => d.ProcesoId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_cotizaci_tener_proceso");
 
             entity.HasOne(d => d.Usunot).WithMany(p => p.Cotizacions)
-                .HasForeignKey(d => d.UsunotId)
+                .HasForeignKey(d => d.UsuarioNotariaId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_cotizaci_crea_usuario_");
         });
 
         modelBuilder.Entity<Factura>(entity =>
         {
-            entity.HasKey(e => e.FacId).HasName("pk_factura");
+            entity.HasKey(e => e.Id).HasName("factura_pkey");
 
-            entity.ToTable("Factura");
+            entity.ToTable("factura");
 
-            entity.HasIndex(e => e.FacId, "factura_pk").IsUnique();
-
-            entity.HasIndex(e => e.ProId, "lleva2_fk");
-
-            entity.Property(e => e.FacId)
-                .ValueGeneratedNever()
-                .HasColumnName("fac_id");
-            entity.Property(e => e.FacCedulaCliente)
+            entity.Property(e => e.Id).HasColumnName("Id").UseIdentityColumn();
+            entity.Property(e => e.CedulaCliente)
                 .HasMaxLength(50)
-                .HasColumnName("fac_cedula_cliente");
-            entity.Property(e => e.FacCorreoCliente)
+                .HasColumnName("Cedulacliente");
+            entity.Property(e => e.CorreoCliente)
                 .HasMaxLength(50)
-                .HasColumnName("fac_correo_cliente");
-            entity.Property(e => e.FacDireccionCliente)
+                .HasColumnName("CorreoCliente");
+            entity.Property(e => e.DireccionCliente)
                 .HasMaxLength(250)
-                .HasColumnName("fac_direccion_cliente");
-            entity.Property(e => e.FacNombreCliente)
+                .HasColumnName("DireccionCliente");
+            entity.Property(e => e.NombreCliente)
                 .HasMaxLength(250)
-                .HasColumnName("fac_nombre_cliente");
-            entity.Property(e => e.FacNumero).HasColumnName("fac_numero");
-            entity.Property(e => e.ProId).HasColumnName("pro_id");
+                .HasColumnName("NombreCliente");
+            entity.Property(e => e.Numero).HasColumnName("numero");
+            entity.Property(e => e.ProcesoId).HasColumnName("proid");
 
             entity.HasOne(d => d.Pro).WithMany(p => p.Facturas)
-                .HasForeignKey(d => d.ProId)
+                .HasForeignKey(d => d.ProcesoId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_factura_lleva2_proceso");
+                .HasConstraintName("fk_factura_lleva_proceso");
         });
 
-        modelBuilder.Entity<Opcione>(entity =>
+        modelBuilder.Entity<Opcion>(entity =>
         {
-            entity.HasKey(e => e.OpId).HasName("pk_opciones");
+            entity.HasKey(e => e.Id).HasName("opciones_pkey");
 
-            entity.HasIndex(e => e.OpId, "opciones_pk").IsUnique();
+            entity.ToTable("opciones");
 
-            entity.Property(e => e.OpId)
-                .ValueGeneratedNever()
-                .HasColumnName("op_id");
-            entity.Property(e => e.OpNombrePermiso)
+            entity.Property(e => e.Id).HasColumnName("id").UseIdentityColumn(); ;
+            entity.Property(e => e.NombrePermiso)
                 .HasMaxLength(250)
-                .HasColumnName("op_nombre_permiso");
+                .HasColumnName("NombrePermiso");
         });
 
         modelBuilder.Entity<Permiso>(entity =>
         {
-            entity.HasKey(e => new { e.OpId, e.UsunotId, e.UsucliId }).HasName("pk_permisos");
+            entity.HasKey(e => e.Id).HasName("permisos_pkey");
 
-            entity.HasIndex(e => e.UsunotId, "permisos2_fk");
+            entity.ToTable("permisos");
 
-            entity.HasIndex(e => e.UsucliId, "permisos3_fk");
-
-            entity.HasIndex(e => e.OpId, "permisos_fk");
-
-            entity.HasIndex(e => new { e.OpId, e.UsunotId, e.UsucliId }, "permisos_pk").IsUnique();
-
-            entity.Property(e => e.OpId).HasColumnName("op_id");
-            entity.Property(e => e.UsunotId).HasColumnName("usunot_id");
-            entity.Property(e => e.UsucliId).HasColumnName("usucli_id");
-            entity.Property(e => e.PerId).HasColumnName("per_id");
+            entity.Property(e => e.Id).HasColumnName("per_id").UseIdentityColumn();
+            entity.Property(e => e.OpcionId).HasColumnName("op_id");
+            entity.Property(e => e.UsuarioClienteId).HasColumnName("usucli_id");
+            entity.Property(e => e.UsuarioNotariaId).HasColumnName("usunot_id");
 
             entity.HasOne(d => d.Op).WithMany(p => p.Permisos)
-                .HasForeignKey(d => d.OpId)
+                .HasForeignKey(d => d.OpcionId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_permisos_permisos_opciones");
+                .HasConstraintName("fk_permisos_permisos2_opciones");
 
             entity.HasOne(d => d.Usucli).WithMany(p => p.Permisos)
-                .HasForeignKey(d => d.UsucliId)
+                .HasForeignKey(d => d.UsuarioClienteId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_permisos_permisos3_usuario_");
+                .HasConstraintName("fk_permisos_permisos_usuario_");
 
             entity.HasOne(d => d.Usunot).WithMany(p => p.Permisos)
-                .HasForeignKey(d => d.UsunotId)
+                .HasForeignKey(d => d.UsuarioNotariaId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_permisos_permisos2_usuario_");
+                .HasConstraintName("fk_permisos_permisos3_usuario_");
         });
 
         modelBuilder.Entity<Proceso>(entity =>
         {
-            entity.HasKey(e => e.ProId).HasName("pk_proceso");
+            entity.HasKey(e => e.Id).HasName("proceso_pkey");
 
-            entity.ToTable("Proceso");
+            entity.ToTable("proceso");
 
-            entity.HasIndex(e => e.TipId, "es_fk");
-
-            entity.HasIndex(e => e.FacId, "lleva_fk");
-
-            entity.HasIndex(e => e.ProId, "proceso_pk").IsUnique();
-
-            entity.HasIndex(e => e.UsucliId, "relationship_5_fk");
-
-            entity.HasIndex(e => e.ArchId, "tiene_fk");
-
-            entity.Property(e => e.ProId)
-                .ValueGeneratedNever()
-                .HasColumnName("pro_id");
-            entity.Property(e => e.ArchId).HasColumnName("arch_id");
-            entity.Property(e => e.FacId).HasColumnName("fac_id");
-            entity.Property(e => e.ProEnvio).HasColumnName("pro_envio");
-            entity.Property(e => e.ProEstado)
+            entity.Property(e => e.Id).HasColumnName("Id").UseIdentityColumn();
+            entity.Property(e => e.ArchivoId).HasColumnName("ArchivoId");
+            entity.Property(e => e.Envio).HasColumnName("Envio");
+            entity.Property(e => e.Estado)
                 .HasMaxLength(50)
-                .HasColumnName("pro_estado");
-            entity.Property(e => e.ProFechaCreacion).HasColumnName("pro_fecha_creacion");
-            entity.Property(e => e.ProFechaFinalizacion).HasColumnName("pro_fecha_finalizacion");
-            entity.Property(e => e.ProObservacion)
+                .HasColumnName("Estado");
+            entity.Property(e => e.FechaCreacion).HasColumnName("FechaCreacion");
+            entity.Property(e => e.FechaFinalizacion).HasColumnName("FechaFinalizacion");
+            entity.Property(e => e.Observacion)
                 .HasMaxLength(300)
-                .HasColumnName("pro_observacion");
-            entity.Property(e => e.TipId).HasColumnName("tip_id");
-            entity.Property(e => e.UsucliId).HasColumnName("usucli_id");
+                .HasColumnName("Observacion");
+            entity.Property(e => e.TipoProcesoId).HasColumnName("TipoProcesoId");
+            entity.Property(e => e.UsuarioClienteId).HasColumnName("UsuarioClienteId");
 
             entity.HasOne(d => d.Arch).WithMany(p => p.Procesos)
-                .HasForeignKey(d => d.ArchId)
+                .HasForeignKey(d => d.ArchivoId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_proceso_tiene_archivo");
 
-            entity.HasOne(d => d.Fac).WithMany(p => p.Procesos)
-                .HasForeignKey(d => d.FacId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_proceso_lleva_factura");
-
             entity.HasOne(d => d.Tip).WithMany(p => p.Procesos)
-                .HasForeignKey(d => d.TipId)
+                .HasForeignKey(d => d.TipoProcesoId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_proceso_es_tipo_pro");
 
             entity.HasOne(d => d.Usucli).WithMany(p => p.Procesos)
-                .HasForeignKey(d => d.UsucliId)
+                .HasForeignKey(d => d.UsuarioClienteId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_proceso_relations_usuario_");
         });
 
         modelBuilder.Entity<TipoProceso>(entity =>
         {
-            entity.HasKey(e => e.TipId).HasName("pk_tipo_proceso");
+            entity.HasKey(e => e.Id).HasName("tipo_proceso_pkey");
 
-            entity.ToTable("Tipo Proceso");
+            entity.ToTable("tipo_proceso");
 
-            entity.HasIndex(e => e.TipId, "tipo_proceso_pk").IsUnique();
-
-            entity.Property(e => e.TipId)
-                .ValueGeneratedNever()
-                .HasColumnName("tip_id");
-            entity.Property(e => e.TipNombre)
+            entity.Property(e => e.Id).HasColumnName("Id").UseIdentityColumn(); 
+            entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
-                .HasColumnName("tip_nombre");
-        });
-
-        modelBuilder.Entity<Usuario>(entity =>
-        {
-            entity.Property(e => e.UrlfotoPerfil).HasColumnName("URLFotoPerfil");
+                .HasColumnName("Nombre");
         });
 
         modelBuilder.Entity<UsuarioCliente>(entity =>
         {
-            entity.HasKey(e => e.UsucliId).HasName("pk_usuario_cliente");
+            entity.HasKey(e => e.Id).HasName("usuario_cliente_pkey");
 
-            entity.ToTable("Usuario Cliente");
+            entity.ToTable("usuario_cliente");
 
-            entity.HasIndex(e => e.UsucliId, "usuario_cliente_pk").IsUnique();
+            entity.Property(e => e.Id)
+                .HasColumnName("Id")
+                .UseIdentityColumn();  // Ensure it's configured as an identity column
 
-            entity.Property(e => e.UsucliId)
-                .ValueGeneratedNever()
-                .HasColumnName("usucli_id");
-            entity.Property(e => e.UsucliApellido)
+            entity.Property(e => e.Nombre)
                 .HasMaxLength(250)
-                .HasColumnName("usucli_apellido");
-            entity.Property(e => e.UsucliCedula)
+                .HasColumnName("Nombre");
+
+            entity.Property(e => e.Apellido)
+                .HasMaxLength(250)
+                .HasColumnName("Apellido");
+
+            entity.Property(e => e.Correo)
+                .HasMaxLength(250)
+                .HasColumnName("Correo");
+
+            entity.Property(e => e.Telefono)
                 .HasMaxLength(50)
-                .HasColumnName("usucli_cedula");
-            entity.Property(e => e.UsucliClave)
+                .HasColumnName("Telefono");
+
+            entity.Property(e => e.Direccion)
+                .HasMaxLength(250)
+                .HasColumnName("Direccion");
+
+            entity.Property(e => e.Clave)
                 .HasMaxLength(50)
-                .HasColumnName("usucli_clave");
-            entity.Property(e => e.UsucliCorreo)
-                .HasMaxLength(250)
-                .HasColumnName("usucli_correo");
-            entity.Property(e => e.UsucliDireccion)
-                .HasMaxLength(250)
-                .HasColumnName("usucli_direccion");
-            entity.Property(e => e.UsucliNombre)
-                .HasMaxLength(250)
-                .HasColumnName("usucli_nombre");
-            entity.Property(e => e.UsucliTelefono)
+                .HasColumnName("Clave");
+
+            entity.Property(e => e.Cedula)
                 .HasMaxLength(50)
-                .HasColumnName("usucli_telefono");
+                .HasColumnName("Cedula");
         });
 
-        modelBuilder.Entity<UsuarioNotarium>(entity =>
+        modelBuilder.Entity<UsuarioNotaria>(entity =>
         {
-            entity.HasKey(e => e.UsunotId).HasName("pk_usuario_notaria");
+            entity.HasKey(e => e.Id).HasName("usuario_notaria_pkey");
 
-            entity.ToTable("Usuario Notaria");
+            entity.ToTable("usuario_notaria");
 
-            entity.HasIndex(e => e.UsunotId, "usuario_notaria_pk").IsUnique();
 
-            entity.Property(e => e.UsunotId)
-                .ValueGeneratedNever()
-                .HasColumnName("usunot_id");
-            entity.Property(e => e.UsunotApellido)
+            entity.Property(e => e.Id)
+                .HasColumnName("Id")
+                .UseIdentityColumn();
+
+            entity.Property(e => e.Apellido)
                 .HasMaxLength(250)
-                .HasColumnName("usunot_apellido");
-            entity.Property(e => e.UsunotClave)
+                .HasColumnName("Apellido");
+            entity.Property(e => e.Clave)
                 .HasMaxLength(50)
-                .HasColumnName("usunot_clave");
-            entity.Property(e => e.UsunotCorreo)
+                .HasColumnName("Clave");
+            entity.Property(e => e.Correo)
                 .HasMaxLength(50)
-                .HasColumnName("usunot_correo");
-            entity.Property(e => e.UsunotNombre)
+                .HasColumnName("Correo");
+            entity.Property(e => e.Nombre)
                 .HasMaxLength(250)
-                .HasColumnName("usunot_nombre");
-            entity.Property(e => e.UsunotTelefono)
+                .HasColumnName("Nombre");
+            entity.Property(e => e.Telefono)
                 .HasMaxLength(50)
-                .HasColumnName("usunot_telefono");
+                .HasColumnName("Telefono");
         });
 
         OnModelCreatingPartial(modelBuilder);

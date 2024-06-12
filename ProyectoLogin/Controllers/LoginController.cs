@@ -7,17 +7,15 @@ using System.Security.Claims;
 
 namespace ProyectoLogin.Controllers
 {
-   
+
     public class LoginController : Controller
     {
-        private readonly IUsuarioService _usuarioService;
-        private readonly IFilesService _filesService;
-        private readonly UsuarioContext _context;
+        private readonly IUsuarioClienteService _usuarioClienteService;
+        private readonly UsuarioClienteContext _context;
 
-        public LoginController(IUsuarioService usuarioService, IFilesService filesService, UsuarioContext context)
+        public LoginController(IUsuarioClienteService usuarioClienteService, UsuarioClienteContext context)
         {
-            _usuarioService = usuarioService;
-            _filesService = filesService;
+            _usuarioClienteService = usuarioClienteService;
             _context = context;
         }
 
@@ -27,31 +25,30 @@ namespace ProyectoLogin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Registro(Usuario usuario, IFormFile Imagen)
+        public async Task<IActionResult> Registro(UsuarioCliente usuario)
         {
+            if (!ModelState.IsValid)
+            {
+                ViewData["Mensaje"] = "Datos inválidos.";
+                return View(usuario);
+            }
+
             // Verificar si ya existe un correo electrónico registrado
-            Usuario usuarioExistente = await _usuarioService.GetUsuarioPorCorreo(usuario.Correo);
+            UsuarioCliente usuarioExistente = await _usuarioClienteService.GetUsuarioClientePorCorreo(usuario.Correo);
 
             if (usuarioExistente != null)
             {
                 ViewData["Mensaje"] = "Ya existe un usuario registrado con ese correo electrónico.";
-                return View(); // Retornar vista con mensaje de error
+                return View(usuario); // Retornar vista con mensaje de error
             }
 
             // Procesar la imagen si está presente
-            string urlImagen = null;
-            if (Imagen != null)
-            {
-                Stream image = Imagen.OpenReadStream();
-                urlImagen = await _filesService.SubirArchivo(image, Imagen.FileName);
-            }
 
             // Encriptar contraseña y asignar URL de la imagen (si existe)
             usuario.Clave = Utilidades.EncriptarClave(usuario.Clave);
-            usuario.URLFotoPerfil = urlImagen;
 
             // Guardar usuario
-            Usuario usuarioCreado = await _usuarioService.SaveUsuario(usuario);
+            UsuarioCliente usuarioCreado = await _usuarioClienteService.SaveUsuarioCliente(usuario);
 
             if (usuarioCreado.Id > 0)
             {
@@ -59,7 +56,7 @@ namespace ProyectoLogin.Controllers
             }
 
             ViewData["Mensaje"] = "No se pudo crear el usuario";
-            return View();
+            return View(usuario);
         }
 
 
@@ -71,7 +68,7 @@ namespace ProyectoLogin.Controllers
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(string correo, string clave)
         {
-            Usuario usuarioEncontrado = await _usuarioService.GetUsuario(correo, Utilidades.EncriptarClave(clave));
+            UsuarioCliente usuarioEncontrado = await _usuarioClienteService.GetUsuarioCliente(correo, Utilidades.EncriptarClave(clave));
 
             if (usuarioEncontrado == null)
             {
@@ -81,14 +78,9 @@ namespace ProyectoLogin.Controllers
 
             List<Claim> claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, usuarioEncontrado.NombreUsuario)
+                new Claim(ClaimTypes.Name, usuarioEncontrado.Nombre)
             };
 
-            // Agregar el Claim de la foto de perfil solo si existe
-            if (!string.IsNullOrEmpty(usuarioEncontrado.URLFotoPerfil))
-            {
-                claims.Add(new Claim("FotoPerfil", usuarioEncontrado.URLFotoPerfil));
-            }
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             AuthenticationProperties properties = new AuthenticationProperties()

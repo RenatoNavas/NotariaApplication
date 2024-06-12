@@ -5,13 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoLogin.Models;
 
-public partial class TipoProceso
+public partial class Opcion
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public string? Nombre { get; set; }
+    public string? NombrePermiso { get; set; }
 
-    public virtual ICollection<Proceso> Procesos { get; set; } = new List<Proceso>();
+    public virtual ICollection<Permiso> Permisos { get; set; } = new List<Permiso>();
 }

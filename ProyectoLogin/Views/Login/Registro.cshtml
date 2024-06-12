@@ -1,4 +1,4 @@
-﻿@model ProyectoLogin.Models.Usuario
+﻿@model ProyectoLogin.Models.UsuarioCliente
 @{
     Layout = null;
 }
@@ -55,16 +55,16 @@
                         </div>
                         <form method="post" asp-controller="Login" asp-action="Registro" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="nombreUsuario"><span class="fa fa-user"></span> Nombre Completo</label>
-                                <input type="text" class="form-control" id="nombreUsuario" placeholder="Ingrese su nombre completo" required name="NombreUsuario">
+                                <label for="nombre"><span class="fa fa-user"></span> Nombre Completo</label>
+                                <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre completo" required name="nombre">
                             </div>
                             <div class="form-group">
                                 <label for="correo"><span class="fa fa-envelope"></span> Correo Electrónico</label>
-                                <input type="text" class="form-control" id="correo" placeholder="Ingrese su correo" required name="Correo">
+                                <input type="email" class="form-control" id="correo" placeholder="Ingrese su correo" required name="correo">
                             </div>
                             <div class="form-group">
                                 <label for="clave"><span class="fa fa-lock"></span> Contraseña</label>
-                                <input type="password" class="form-control" id="clave" placeholder="Ingrese su contraseña" required name="Clave">
+                                <input type="password" class="form-control" id="clave" placeholder="Ingrese su contraseña" required name="clave">
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary btn-block">Regístrate</button>

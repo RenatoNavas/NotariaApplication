@@ -1,25 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoLogin.Models;
 
 public partial class Cotizacion
 {
-    public int CotId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
-    public long ProId { get; set; }
+    public int ProcesoId { get; set; }
 
-    public int UsunotId { get; set; }
+    public int UsuarioNotariaId { get; set; }
 
-    public double? CotValorTotal { get; set; }
+    public double? ValorTotal { get; set; }
 
-    public string? CotDocumento { get; set; }
+    public string? Documento { get; set; }
 
-    public DateOnly? CotFecha { get; set; }
+    public DateOnly? Fecha { get; set; }
 
-    public bool? CotAceptacion { get; set; }
+    public bool? Aceptacion { get; set; }
 
     public virtual Proceso Pro { get; set; } = null!;
 
-    public virtual UsuarioNotarium Usunot { get; set; } = null!;
+    public virtual UsuarioNotaria Usunot { get; set; } = null!;
 }

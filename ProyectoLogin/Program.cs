@@ -15,11 +15,11 @@ namespace ProyectoLogin
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<UsuarioContext>(o =>
+            builder.Services.AddDbContext<UsuarioClienteContext>(o =>
             {
                 o.UseNpgsql(builder.Configuration.GetConnectionString("CadenaSQL"));
             });
-            builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+            builder.Services.AddScoped<IUsuarioClienteService, UsuarioClienteService>();
             builder.Services.AddScoped<IFilesService, FilesService>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
