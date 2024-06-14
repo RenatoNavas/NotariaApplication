@@ -31,13 +31,8 @@
             margin-bottom: 10px;
         }
 
-        input[type="file"] {
-            display: inline-block;
+        input[type="file"], input[type="text"], input[type="tel"], input[type="radio"] {
             margin-top: 10px;
-        }
-
-        input[type="radio"] {
-            margin-right: 10px;
         }
 
         button {
@@ -69,16 +64,17 @@
                 background-color: #f2f2f2;
             }
 
-        #delivery-form {
-            display: none;
+        #delivery-container {
+            display: flex;
+            justify-content: left;
+            align-items: flex-start;
             margin-top: 20px;
-            text-align: left;
+            gap: 20px;
         }
 
-        #delivery-details {
-            margin-top: 20px;
+        #delivery-form, #delivery-details {
             text-align: left;
-            display: none;
+            max-width: 300px;
         }
     </style>
 </head>
@@ -86,11 +82,8 @@
     <h1>MATERIALIZACIÓN</h1>
     <div class="form-group">
         <label for="document-upload">Tienes documentos que deseas materializar, por favor insértalo aquí:</label>
-        <input type="file" id="document-upload" multiple onchange="addDocuments()">
-    </div>
-    <div class="form-group">
-        <label><input type="radio" name="delivery-option" value="notaria" onclick="toggleDeliveryForm()"> Desea retirar sus documentos en la Notaría</label>
-        <label><input type="radio" name="delivery-option" value="servientrega" onclick="toggleDeliveryForm()"> Desea que se envíen los documentos por ServiEntrega</label>
+        <input type="file" id="document-upload" multiple aria-describedby="document-upload-help">
+        <div id="document-upload-help" class="form-text">Puedes subir múltiples archivos.</div>
     </div>
 
     <table id="documents-table">
@@ -134,23 +127,30 @@
         </div>
     </div>
 
-    <div id="delivery-form">
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre">
-        </div>
-        <div class="form-group">
-            <label for="direccion">Dirección de entrega:</label>
-            <input type="text" id="direccion">
-        </div>
-        <div class="form-group">
-            <label for="telefono">Teléfono:</label>
-            <input type="tel" id="telefono">
-        </div>
-        <button onclick="saveDeliveryDetails()">Guardar</button>
+    <div class="form-group">
+        <label><input type="radio" name="delivery-option" value="notaria" onclick="toggleDeliveryForm()"> Desea retirar sus documentos en la Notaría</label>
+        <label><input type="radio" name="delivery-option" value="servientrega" onclick="toggleDeliveryForm()"> Desea que se envíen los documentos por ServiEntrega</label>
     </div>
 
-    <div id="delivery-details"></div>
+    <div id="delivery-container">
+        <div id="delivery-form" style="display: none;">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre">
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección de entrega:</label>
+                <input type="text" id="direccion">
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono">
+            </div>
+            <button onclick="saveDeliveryDetails()">Guardar</button>
+        </div>
+
+        <div id="delivery-details"></div>
+    </div>
 
     <button onclick="generateProforma()">Generar Proforma</button>
     <div id="message"></div>
@@ -170,9 +170,7 @@
                 const actionsCell = document.createElement('td');
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Eliminar';
-                deleteButton.onclick = function () {
-                    tableBody.removeChild(row);
-                };
+                deleteButton.onclick = () => tableBody.removeChild(row);
                 actionsCell.appendChild(deleteButton);
                 row.appendChild(actionsCell);
 
@@ -182,13 +180,11 @@
 
         function toggleDeliveryForm() {
             const deliveryForm = document.getElementById('delivery-form');
+            const deliveryDetails = document.getElementById('delivery-details');
             const selectedOption = document.querySelector('input[name="delivery-option"]:checked').value;
 
-            if (selectedOption === 'servientrega') {
-                deliveryForm.style.display = 'block';
-            } else {
-                deliveryForm.style.display = 'none';
-            }
+            deliveryForm.style.display = selectedOption === 'servientrega' ? 'block' : 'none';
+            deliveryDetails.style.display = selectedOption === 'servientrega' ? 'block' : 'none';
         }
 
         function saveDeliveryDetails() {
@@ -198,17 +194,18 @@
             const deliveryDetails = document.getElementById('delivery-details');
 
             deliveryDetails.innerHTML = `
-                                <h3>Detalles de Entrega</h3>
-                                <p><strong>Nombre:</strong> ${nombre}</p>
-                                <p><strong>Dirección de entrega:</strong> ${direccion}</p>
-                                <p><strong>Teléfono:</strong> ${telefono}</p>
-                            `;
+                        <h3>Detalles de Entrega</h3>
+                        <p><strong>Nombre:</strong> ${nombre}</p>
+                        <p><strong>Dirección de entrega:</strong> ${direccion}</p>
+                        <p><strong>Teléfono:</strong> ${telefono}</p>
+                    `;
 
             deliveryDetails.style.display = 'block';
         }
 
         function generateProforma() {
-            document.getElementById("message").textContent = "Su proforma está siendo generada, en las próximas horas un funcionario se comunicará con usted.";
+            const message = document.getElementById("message");
+            message.textContent = "Su proforma está siendo generada, en las próximas horas un funcionario se comunicará con usted.";
         }
     </script>
 </body>
