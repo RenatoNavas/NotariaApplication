@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ProyectoLogin.Models.AllViewModel
+@{
     ViewData["Title"] = "Materializacion";
 }
 
@@ -12,6 +13,7 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: #e8f1f2;
         }
 
         h1 {
@@ -101,6 +103,37 @@
         <tbody></tbody>
     </table>
 
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Tipos de Procesos</h2>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var proceso in Model.TipoProcesos)
+                                    {
+                                        <tr>
+                                            <td>@proceso.Id</td>
+                                            <td>@proceso.Nombre</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="delivery-form">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
@@ -165,11 +198,11 @@
             const deliveryDetails = document.getElementById('delivery-details');
 
             deliveryDetails.innerHTML = `
-                        <h3>Detalles de Entrega</h3>
-                        <p><strong>Nombre:</strong> ${nombre}</p>
-                        <p><strong>Dirección de entrega:</strong> ${direccion}</p>
-                        <p><strong>Teléfono:</strong> ${telefono}</p>
-                    `;
+                                <h3>Detalles de Entrega</h3>
+                                <p><strong>Nombre:</strong> ${nombre}</p>
+                                <p><strong>Dirección de entrega:</strong> ${direccion}</p>
+                                <p><strong>Teléfono:</strong> ${telefono}</p>
+                            `;
 
             deliveryDetails.style.display = 'block';
         }
@@ -180,4 +213,3 @@
     </script>
 </body>
 </html>
-

@@ -21,7 +21,7 @@ public partial class UsuarioNotaria
 
     public string? Clave { get; set; }
 
-    public virtual ICollection<Cotizacion> Cotizacions { get; set; } = new List<Cotizacion>();
+    public virtual ICollection<Cotizacion> Cotizaciones { get; set; } = new List<Cotizacion>();
 
     public virtual ICollection<Permiso> Permisos { get; set; } = new List<Permiso>();
 }

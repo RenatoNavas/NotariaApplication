@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ProyectoLogin.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240614000733_InitSchema")]
+    partial class InitSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,43 +29,43 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnName("arch_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Direccion")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Direccion");
+                        .HasColumnName("arch_direccion");
 
                     b.Property<string>("Documento")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Documento");
+                        .HasColumnName("arch_documento");
 
                     b.Property<DateOnly?>("FechaOtorgamiento")
                         .HasColumnType("date")
-                        .HasColumnName("FechaOtorgamiento");
+                        .HasColumnName("arch_fecha_otorgamiento");
 
                     b.Property<string>("PersonaEntrega")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("PersonaEntrega");
+                        .HasColumnName("arch_persona_entrega");
 
                     b.Property<string>("Telefono")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Telefono");
+                        .HasColumnName("arch_telefono");
 
                     b.Property<string>("TipoActo")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("TipoActo");
+                        .HasColumnName("arch_tipo_acto");
 
                     b.HasKey("Id")
                         .HasName("archivo_pkey");
 
-                    b.ToTable("Archivo", (string)null);
+                    b.ToTable("archivo", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Cotizacion", b =>
@@ -70,34 +73,34 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnName("cot_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Aceptacion")
                         .HasColumnType("boolean")
-                        .HasColumnName("Aceptacion");
+                        .HasColumnName("cot_aceptacion");
 
                     b.Property<string>("Documento")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Documento");
+                        .HasColumnName("cot_documento");
 
                     b.Property<DateOnly?>("Fecha")
                         .HasColumnType("date")
-                        .HasColumnName("Fecha");
+                        .HasColumnName("cot_fecha");
 
                     b.Property<int>("ProcesoId")
                         .HasColumnType("integer")
-                        .HasColumnName("ProcesoId");
+                        .HasColumnName("pro_id");
 
                     b.Property<int>("UsuarioNotariaId")
                         .HasColumnType("integer")
-                        .HasColumnName("UsuarioNotariaId");
+                        .HasColumnName("usunot_id");
 
                     b.Property<float>("ValorTotal")
                         .HasColumnType("real")
-                        .HasColumnName("ValorTotal");
+                        .HasColumnName("cot_valor_total");
 
                     b.HasKey("Id")
                         .HasName("cotizacion_pkey");
@@ -106,7 +109,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     b.HasIndex("UsuarioNotariaId");
 
-                    b.ToTable("Cotizacion", (string)null);
+                    b.ToTable("cotizacion", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Factura", b =>
@@ -114,44 +117,44 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnName("fac_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CedulaCliente")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("CedulaCliente");
+                        .HasColumnName("fac_cedula_cliente");
 
                     b.Property<string>("CorreoCliente")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("CorreoCliente");
+                        .HasColumnName("fac_correo_cliente");
 
                     b.Property<string>("DireccionCliente")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("DireccionCliente");
+                        .HasColumnName("fac_direccion_cliente");
 
                     b.Property<string>("NombreCliente")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("NombreCliente");
+                        .HasColumnName("fac_nombre_cliente");
 
                     b.Property<int>("Numero")
                         .HasColumnType("integer")
-                        .HasColumnName("Numero");
+                        .HasColumnName("fac_numero");
 
                     b.Property<int>("ProcesoId")
                         .HasColumnType("integer")
-                        .HasColumnName("ProcesoId");
+                        .HasColumnName("pro_id");
 
                     b.HasKey("Id")
                         .HasName("factura_pkey");
 
                     b.HasIndex("ProcesoId");
 
-                    b.ToTable("Factura", (string)null);
+                    b.ToTable("factura", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Opcion", b =>
@@ -159,19 +162,19 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnName("op_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("NombrePermiso")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("NombrePermiso");
+                        .HasColumnName("op_nombre_permiso");
 
                     b.HasKey("Id")
                         .HasName("opciones_pkey");
 
-                    b.ToTable("Opcion", (string)null);
+                    b.ToTable("opciones", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Permiso", b =>
@@ -179,21 +182,21 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("PermisoId");
+                        .HasColumnName("per_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("OpcionId")
                         .HasColumnType("integer")
-                        .HasColumnName("OpcionesId");
+                        .HasColumnName("op_id");
 
                     b.Property<int>("UsuarioClienteId")
                         .HasColumnType("integer")
-                        .HasColumnName("UsuarioClienteId");
+                        .HasColumnName("usucli_id");
 
                     b.Property<int>("UsuarioNotariaId")
                         .HasColumnType("integer")
-                        .HasColumnName("UsuarioNotariaId");
+                        .HasColumnName("usunot_id");
 
                     b.HasKey("Id")
                         .HasName("permisos_pkey");
@@ -204,7 +207,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     b.HasIndex("UsuarioNotariaId");
 
-                    b.ToTable("Permiso", (string)null);
+                    b.ToTable("permisos", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Proceso", b =>
@@ -212,43 +215,43 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnName("pro_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ArchivoId")
                         .HasColumnType("integer")
-                        .HasColumnName("ArchivoId");
+                        .HasColumnName("arch_id");
 
                     b.Property<bool?>("Envio")
                         .HasColumnType("boolean")
-                        .HasColumnName("Envio");
+                        .HasColumnName("pro_envio");
 
                     b.Property<string>("Estado")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Estado");
+                        .HasColumnName("pro_estado");
 
                     b.Property<DateTime?>("FechaCreacion")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("FechaCreacion");
+                        .HasColumnName("pro_fecha_creacion");
 
                     b.Property<DateTime?>("FechaFinalizacion")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("FechaFinalizacion");
+                        .HasColumnName("pro_fecha_finalizacion");
 
                     b.Property<string>("Observacion")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)")
-                        .HasColumnName("Observacion");
+                        .HasColumnName("pro_observacion");
 
                     b.Property<int>("TipoProcesoId")
                         .HasColumnType("integer")
-                        .HasColumnName("TipoProcesoId");
+                        .HasColumnName("tip_id");
 
                     b.Property<int>("UsuarioClienteId")
                         .HasColumnType("integer")
-                        .HasColumnName("UsuarioClienteId");
+                        .HasColumnName("usucli_id");
 
                     b.HasKey("Id")
                         .HasName("proceso_pkey");
@@ -259,7 +262,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     b.HasIndex("UsuarioClienteId");
 
-                    b.ToTable("Proceso", (string)null);
+                    b.ToTable("proceso", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.TipoProceso", b =>
@@ -267,19 +270,19 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnName("tip_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nombre")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Nombre");
+                        .HasColumnName("tip_nombre");
 
                     b.HasKey("Id")
                         .HasName("tipo_proceso_pkey");
 
-                    b.ToTable("TipoProceso", (string)null);
+                    b.ToTable("tipo_proceso", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.UsuarioCliente", b =>
@@ -287,49 +290,49 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnName("usucli_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Apellido")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Apellido");
+                        .HasColumnName("usucli_apellido");
 
                     b.Property<string>("Cedula")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Cedula");
+                        .HasColumnName("usucli_cedula");
 
                     b.Property<string>("Clave")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Clave");
+                        .HasColumnName("usucli_clave");
 
                     b.Property<string>("Correo")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Correo");
+                        .HasColumnName("usucli_correo");
 
                     b.Property<string>("Direccion")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Direccion");
+                        .HasColumnName("usucli_direccion");
 
                     b.Property<string>("Nombre")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Nombre");
+                        .HasColumnName("usucli_nombre");
 
                     b.Property<string>("Telefono")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Telefono");
+                        .HasColumnName("usucli_telefono");
 
                     b.HasKey("Id")
                         .HasName("usuario_cliente_pkey");
 
-                    b.ToTable("UsuarioCliente", (string)null);
+                    b.ToTable("usuario_cliente", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.UsuarioNotaria", b =>
@@ -337,39 +340,39 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnName("usunot_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Apellido")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Apellido");
+                        .HasColumnName("usunot_apellido");
 
                     b.Property<string>("Clave")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Clave");
+                        .HasColumnName("usunot_clave");
 
                     b.Property<string>("Correo")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Correo");
+                        .HasColumnName("usunot_correo");
 
                     b.Property<string>("Nombre")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("Nombre");
+                        .HasColumnName("usunot_nombre");
 
                     b.Property<string>("Telefono")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Telefono");
+                        .HasColumnName("usunot_telefono");
 
                     b.HasKey("Id")
                         .HasName("usuario_notaria_pkey");
 
-                    b.ToTable("UsuarioNotaria", (string)null);
+                    b.ToTable("usuario_notaria", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Cotizacion", b =>

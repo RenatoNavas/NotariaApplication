@@ -11,11 +11,14 @@ namespace ProyectoLogin.Controllers
     public class LoginController : Controller
     {
         private readonly IUsuarioClienteService _usuarioClienteService;
-        private readonly UsuarioClienteContext _context;
+        private readonly ITipoProcesoService _tipoProcesoservice;
 
-        public LoginController(IUsuarioClienteService usuarioClienteService, UsuarioClienteContext context)
+        private readonly ApplicationDbContext _context;
+
+        public LoginController(IUsuarioClienteService usuarioClienteService, ITipoProcesoService tipoProcesoservice ,ApplicationDbContext context)
         {
             _usuarioClienteService = usuarioClienteService;
+            _tipoProcesoservice = tipoProcesoservice;
             _context = context;
         }
 
@@ -49,6 +52,7 @@ namespace ProyectoLogin.Controllers
 
             // Guardar usuario
             UsuarioCliente usuarioCreado = await _usuarioClienteService.SaveUsuarioCliente(usuario);
+            List<TipoProceso> tip = await _tipoProcesoservice.GetTipoProcesos();
 
             if (usuarioCreado.Id > 0)
             {
