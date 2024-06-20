@@ -54,15 +54,15 @@
             border-collapse: collapse;
         }
 
-            #documents-table th, #documents-table td {
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: left;
-            }
+        #documents-table th, #documents-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-            #documents-table th {
-                background-color: #f2f2f2;
-            }
+        #documents-table th {
+            background-color: #f2f2f2;
+        }
 
         #delivery-container {
             display: flex;
@@ -81,8 +81,8 @@
 <body>
     <h1>MATERIALIZACIÓN</h1>
     <div class="form-group">
-        <label for="document-upload">Tienes documentos que deseas materializar, por favor insértalo aquí:</label>
-        <input type="file" id="document-upload" multiple aria-describedby="document-upload-help">
+        <label for="documento">Tienes documentos que deseas materializar, por favor insértalo aquí:</label>
+        <input type="file" id="documento" multiple aria-describedby="document-upload-help" onchange="addDocuments()">
         <div id="document-upload-help" class="form-text">Puedes subir múltiples archivos.</div>
     </div>
 
@@ -96,55 +96,24 @@
         <tbody></tbody>
     </table>
 
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2>Tipos de Procesos</h2>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var proceso in Model.TipoProcesos)
-                                    {
-                                        <tr>
-                                            <td>@proceso.Id</td>
-                                            <td>@proceso.Nombre</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="form-group">
-        <label><input type="radio" name="delivery-option" value="notaria" onclick="toggleDeliveryForm()"> Desea retirar sus documentos en la Notaría</label>
-        <label><input type="radio" name="delivery-option" value="servientrega" onclick="toggleDeliveryForm()"> Desea que se envíen los documentos por ServiEntrega</label>
+        <label><input type="radio" name="aceptacion" value="notaria" onclick="toggleDeliveryForm()"> Desea retirar sus documentos en la Notaría</label>
+        <label><input type="radio" name="aceptacion" value="servientrega" onclick="toggleDeliveryForm()"> Desea que se envíen los documentos por ServiEntrega</label>
     </div>
 
     <div id="delivery-container">
         <div id="delivery-form" style="display: none;">
             <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre">
+                <label for="NombreCliente">Nombre:</label>
+                <input type="text" id="NombreCliente">
             </div>
             <div class="form-group">
-                <label for="direccion">Dirección de entrega:</label>
-                <input type="text" id="direccion">
+                <label for="DireccionCliente">Dirección de entrega:</label>
+                <input type="text" id="DireccionCliente">
             </div>
             <div class="form-group">
-                <label for="telefono">Teléfono:</label>
-                <input type="tel" id="telefono">
+                <label for="Numero">Teléfono:</label>
+                <input type="tel" id="Numero">
             </div>
             <button onclick="saveDeliveryDetails()">Guardar</button>
         </div>
@@ -157,7 +126,7 @@
 
     <script>
         function addDocuments() {
-            const fileInput = document.getElementById('document-upload');
+            const fileInput = document.getElementById('documento');
             const tableBody = document.querySelector('#documents-table tbody');
 
             for (const file of fileInput.files) {
@@ -181,24 +150,24 @@
         function toggleDeliveryForm() {
             const deliveryForm = document.getElementById('delivery-form');
             const deliveryDetails = document.getElementById('delivery-details');
-            const selectedOption = document.querySelector('input[name="delivery-option"]:checked').value;
+            const selectedOption = document.querySelector('input[name="aceptacion"]:checked').value;
 
             deliveryForm.style.display = selectedOption === 'servientrega' ? 'block' : 'none';
             deliveryDetails.style.display = selectedOption === 'servientrega' ? 'block' : 'none';
         }
 
         function saveDeliveryDetails() {
-            const nombre = document.getElementById('nombre').value;
-            const direccion = document.getElementById('direccion').value;
-            const telefono = document.getElementById('telefono').value;
+            const NombreCliente = document.getElementById('NombreCliente').value;
+            const DireccionCliente = document.getElementById('DireccionCliente').value;
+            const Numero = document.getElementById('Numero').value;
             const deliveryDetails = document.getElementById('delivery-details');
 
             deliveryDetails.innerHTML = `
-                        <h3>Detalles de Entrega</h3>
-                        <p><strong>Nombre:</strong> ${nombre}</p>
-                        <p><strong>Dirección de entrega:</strong> ${direccion}</p>
-                        <p><strong>Teléfono:</strong> ${telefono}</p>
-                    `;
+                <h3>Detalles de Entrega</h3>
+                <p><strong>Nombre:</strong> ${NombreCliente}</p>
+                <p><strong>Dirección de entrega:</strong> ${DireccionCliente}</p>
+                <p><strong>Teléfono:</strong> ${Numero}</p>
+            `;
 
             deliveryDetails.style.display = 'block';
         }
