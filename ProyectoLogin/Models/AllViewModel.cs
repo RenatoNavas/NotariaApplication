@@ -6,14 +6,14 @@ namespace ProyectoLogin.Models
     {
         public List<TipoProceso> TipoProcesos { get; set; }
         public List<Factura> Facturas { get; set; }
-        
-        public Factura Factura1 { get; set; }
+        public List<Archivo> Archivos { get; set; }
+        public List<Cotizacion> Cotizaciones {  get; set; }
+
 
         public AllViewModel()
         {
             TipoProcesos = new List<TipoProceso>();
             Facturas = new List<Factura>();
-            Factura1 = new Factura();
         }
     }
 }

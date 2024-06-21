@@ -26,6 +26,9 @@ namespace ProyectoLogin
             builder.Services.AddScoped<IUsuarioClienteService, UsuarioClienteService>();
             builder.Services.AddScoped<IFilesService, FilesService>();
             builder.Services.AddScoped<ITipoProcesoService, TipoProcesoService>();
+            builder.Services.AddScoped<IArchivoService, ArchivoService>();
+            builder.Services.AddScoped<ICotizacionService, CotizacionService>();
+            builder.Services.AddScoped<IFacturaService, FacturaService>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
