@@ -14,11 +14,13 @@ namespace ProyectoLogin.Services
             _context = context;
         }
 
-        public async Task<List<TipoProceso>> GetTipoProcesos()
+        public async Task<TipoProceso> GetTipoProcesoMaterializacion()
         {
-            List<TipoProceso> tipoProcesos = await _context.TipoProcesos.ToListAsync();
+            TipoProceso tipoProceso = await _context.TipoProcesos
+                .FirstOrDefaultAsync(tp => tp.Id == 1);
 
-            return tipoProcesos;
+            return tipoProceso;
         }
+
     }
 }

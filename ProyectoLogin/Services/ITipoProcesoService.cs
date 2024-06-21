@@ -6,6 +6,6 @@ namespace ProyectoLogin.Services
 {
     public interface ITipoProcesoService
     {
-        Task<List<TipoProceso>> GetTipoProcesos();
+        Task<TipoProceso> GetTipoProcesoMaterializacion();
     }
 }

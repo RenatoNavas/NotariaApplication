@@ -20,13 +20,16 @@ namespace ProyectoLogin.Controllers
 
         public async Task<IActionResult> Materializacion()
         {
+            TipoProceso tipoProceso = await _tipoProcesoService.GetTipoProcesoMaterializacion();
+
+
             AllViewModel viewModel = new AllViewModel
             {
-                TipoProcesos = await _tipoProcesoService.GetTipoProcesos()
-          
+                TipoProcesos = tipoProceso != null ? new List<TipoProceso> { tipoProceso } : new List<TipoProceso>()
             };
 
             return View(viewModel);
         }
+
     }
 }

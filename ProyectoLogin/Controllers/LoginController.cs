@@ -52,7 +52,7 @@ namespace ProyectoLogin.Controllers
 
             // Guardar usuario
             UsuarioCliente usuarioCreado = await _usuarioClienteService.SaveUsuarioCliente(usuario);
-            List<TipoProceso> tip = await _tipoProcesoservice.GetTipoProcesos();
+
 
             if (usuarioCreado.Id > 0)
             {
