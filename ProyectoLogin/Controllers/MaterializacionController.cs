@@ -2,40 +2,68 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoLogin.Models;
 using ProyectoLogin.Services;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace ProyectoLogin.Controllers
 {
     public class MaterializacionController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ITipoProcesoService _tipoProcesoService;
         private readonly IArchivoService _archivoService;
-        private readonly ICotizacionService _cotizacionService;
-        private readonly IFacturaService _facturaService;
 
-        public MaterializacionController(IFacturaService facturaService, ICotizacionService cotizacionService, IArchivoService archivoService,  ITipoProcesoService tipoProcesoService, ApplicationDbContext context)
+        public MaterializacionController(IArchivoService archivoService, ApplicationDbContext context)
         {
-            _tipoProcesoService = tipoProcesoService;
             _archivoService = archivoService;
-            _cotizacionService = cotizacionService;
-            _facturaService = facturaService;
             _context = context;
         }
 
-        public async Task<IActionResult> Materializacion()
+        public async Task<IActionResult>
+    Materializacion()
         {
-            TipoProceso tipoProceso = await _tipoProcesoService.GetTipoProcesoMaterializacion();
+            var archivos = await _context.Archivos.ToListAsync();
 
-            AllViewModel viewModel = new AllViewModel
-            {
-                TipoProcesos = tipoProceso != null ? new List<TipoProceso> { tipoProceso } : new List<TipoProceso>()
-            };
-
-            return View(viewModel);
+            return View(archivos);
         }
 
+        [HttpPost]
+        public async Task<IActionResult>
+            AgregarArchivos(List<IFormFile>
+                documentos)
+        {
+            foreach (var documento in documentos)
+            {
+                if (documento != null && documento.Length > 0)
+                {
+                    // Guardar el archivo en la base de datos o en algún almacenamiento
+                    var archivo = new Archivo
+                    {
+                        Documento = documento.FileName,  // Nombre del archivo
+                                                         // Asigna otros campos del archivo según tu modelo Archivo
+                    };
+                    _context.Archivos.Add(archivo);
+                }
+            }
 
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Materializacion));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>
+            EliminarArchivo(int id)
+        {
+            var archivo = await _context.Archivos.FindAsync(id);
+            if (archivo != null)
+            {
+                _context.Archivos.Remove(archivo);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Materializacion));
+        }
     }
 }

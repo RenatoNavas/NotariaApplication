@@ -1,181 +1,43 @@
-﻿@model ProyectoLogin.Models.AllViewModel
-@{
-    ViewData["Title"] = "Materializacion";
-}
+﻿@model List<Archivo>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materialización</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #e8f1f2;
-        }
+<h1>Materialización de Archivos</h1>
 
-        h1 {
-            font-size: 4em;
-            color: #333;
-        }
+<div>
+    <!-- Formulario para agregar archivos -->
+    <form asp-action="AgregarArchivos" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="documentos">Documentos:</label>
+            <input type="file" class="form-control-file" id="documentos" name="documentos" multiple>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar Archivos</button>
+    </form>
+</div>
 
-        .form-group {
-            margin: 20px 0;
-        }
-
-        label {
-            display: block;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-
-        input[type="file"], input[type="text"], input[type="tel"], input[type="radio"] {
-            margin-top: 10px;
-        }
-
-        button {
-            font-size: 1em;
-            padding: 10px 20px;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        #message {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: green;
-        }
-
-        #documents-table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-
-        #documents-table th, #documents-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        #documents-table th {
-            background-color: #f2f2f2;
-        }
-
-        #delivery-container {
-            display: flex;
-            justify-content: left;
-            align-items: flex-start;
-            margin-top: 20px;
-            gap: 20px;
-        }
-
-        #delivery-form, #delivery-details {
-            text-align: left;
-            max-width: 300px;
-        }
-    </style>
-</head>
-<body>
-    <h1>MATERIALIZACIÓN</h1>
-    <div class="form-group">
-        <label for="documento">Tienes documentos que deseas materializar, por favor insértalo aquí:</label>
-        <input type="file" id="documento" multiple aria-describedby="document-upload-help" onchange="addDocuments()">
-        <div id="document-upload-help" class="form-text">Puedes subir múltiples archivos.</div>
-    </div>
-
-    <table id="documents-table">
+@if (Model.Any())
+{
+    <table class="table">
         <thead>
             <tr>
                 <th>Documento</th>
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody></tbody>
-    </table>
-
-    <div class="form-group">
-        <label><input type="radio" name="aceptacion" value="notaria" onclick="toggleDeliveryForm()"> Desea retirar sus documentos en la Notaría</label>
-        <label><input type="radio" name="aceptacion" value="servientrega" onclick="toggleDeliveryForm()"> Desea que se envíen los documentos por ServiEntrega</label>
-    </div>
-
-    <div id="delivery-container">
-        <div id="delivery-form" style="display: none;">
-            <div class="form-group">
-                <label for="NombreCliente">Nombre:</label>
-                <input type="text" id="NombreCliente">
-            </div>
-            <div class="form-group">
-                <label for="DireccionCliente">Dirección de entrega:</label>
-                <input type="text" id="DireccionCliente">
-            </div>
-            <div class="form-group">
-                <label for="Numero">Teléfono:</label>
-                <input type="tel" id="Numero">
-            </div>
-            <button onclick="saveDeliveryDetails()">Guardar</button>
-        </div>
-
-        <div id="delivery-details"></div>
-    </div>
-
-    <button onclick="generateProforma()">Generar Proforma</button>
-    <div id="message"></div>
-
-    <script>
-        function addDocuments() {
-            const fileInput = document.getElementById('documento');
-            const tableBody = document.querySelector('#documents-table tbody');
-
-            for (const file of fileInput.files) {
-                const row = document.createElement('tr');
-
-                const fileNameCell = document.createElement('td');
-                fileNameCell.textContent = file.name;
-                row.appendChild(fileNameCell);
-
-                const actionsCell = document.createElement('td');
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Eliminar';
-                deleteButton.onclick = () => tableBody.removeChild(row);
-                actionsCell.appendChild(deleteButton);
-                row.appendChild(actionsCell);
-
-                tableBody.appendChild(row);
+        <tbody>
+            @foreach (var archivo in Model)
+            {
+                <tr>
+                    <td>@archivo.Documento</td>
+                    <td>
+                        <form asp-action="EliminarArchivo" asp-route-id="@archivo.Id" method="post">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
             }
-        }
-
-        function toggleDeliveryForm() {
-            const deliveryForm = document.getElementById('delivery-form');
-            const deliveryDetails = document.getElementById('delivery-details');
-            const selectedOption = document.querySelector('input[name="aceptacion"]:checked').value;
-
-            deliveryForm.style.display = selectedOption === 'servientrega' ? 'block' : 'none';
-            deliveryDetails.style.display = selectedOption === 'servientrega' ? 'block' : 'none';
-        }
-
-        function saveDeliveryDetails() {
-            const NombreCliente = document.getElementById('NombreCliente').value;
-            const DireccionCliente = document.getElementById('DireccionCliente').value;
-            const Numero = document.getElementById('Numero').value;
-            const deliveryDetails = document.getElementById('delivery-details');
-
-            deliveryDetails.innerHTML = `
-                <h3>Detalles de Entrega</h3>
-                <p><strong>Nombre:</strong> ${NombreCliente}</p>
-                <p><strong>Dirección de entrega:</strong> ${DireccionCliente}</p>
-                <p><strong>Teléfono:</strong> ${Numero}</p>
-            `;
-
-            deliveryDetails.style.display = 'block';
-        }
-
-        function generateProforma() {
-            const message = document.getElementById("message");
-            message.textContent = "Su proforma está siendo generada, en las próximas horas un funcionario se comunicará con usted.";
-        }
-    </script>
-</body>
-</html>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay archivos disponibles.</p>
+}
