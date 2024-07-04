@@ -1,43 +1,55 @@
-﻿@model List<Archivo>
+﻿@model List<ProyectoLogin.Models.Archivo>
 
-<h1>Materialización de Archivos</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Materialización de Archivos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Materialización de Archivos</h1>
 
-<div>
-    <!-- Formulario para agregar archivos -->
-    <form asp-action="AgregarArchivos" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="documentos">Documentos:</label>
-            <input type="file" class="form-control-file" id="documentos" name="documentos" multiple>
+        <div>
+            <!-- Formulario para agregar archivos -->
+            <form asp-action="AgregarArchivos" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="documentos">Documentos:</label>
+                    <input type="file" class="form-control-file" id="documentos" name="documentos" multiple>
+                </div>
+                <button type="submit" class="btn btn-primary">Agregar Archivos</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Agregar Archivos</button>
-    </form>
-</div>
 
-@if (Model.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Documento</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var archivo in Model)
-            {
-                <tr>
-                    <td>@archivo.Documento</td>
-                    <td>
-                        <form asp-action="EliminarArchivo" asp-route-id="@archivo.Id" method="post">
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No hay archivos disponibles.</p>
-}
+        @if (Model.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var archivo in Model)
+                    {
+                        <tr>
+                            <td>@archivo.Documento</td>
+                            <td>
+                                <form asp-action="EliminarArchivo" asp-route-id="@archivo.Id" method="post">
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No hay archivos disponibles.</p>
+        }
+    </div>
+</body>
+</html>
