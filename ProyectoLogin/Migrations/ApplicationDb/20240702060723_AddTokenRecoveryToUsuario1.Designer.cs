@@ -5,22 +5,21 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using ProyectoLogin.Models;
 
 #nullable disable
 
 namespace ProyectoLogin.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240612093238_UpdateSchema11")]
-    partial class UpdateSchema11
+    [Migration("20240702060723_AddTokenRecoveryToUsuario1")]
+    partial class AddTokenRecoveryToUsuario1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -61,12 +60,12 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<string>("TipoActo")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)")
-                        .HasColumnName("TipAacto");
+                        .HasColumnName("TipoActo");
 
                     b.HasKey("Id")
                         .HasName("archivo_pkey");
 
-                    b.ToTable("archivo", (string)null);
+                    b.ToTable("Archivo", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Cotizacion", b =>
@@ -78,7 +77,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool?>("Aceptacion")
+                    b.Property<bool>("Aceptacion")
                         .HasColumnType("boolean")
                         .HasColumnName("Aceptacion");
 
@@ -99,8 +98,8 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasColumnType("integer")
                         .HasColumnName("UsuarioNotariaId");
 
-                    b.Property<double?>("ValorTotal")
-                        .HasColumnType("double precision")
+                    b.Property<float>("ValorTotal")
+                        .HasColumnType("real")
                         .HasColumnName("ValorTotal");
 
                     b.HasKey("Id")
@@ -110,7 +109,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     b.HasIndex("UsuarioNotariaId");
 
-                    b.ToTable("cotizacion", (string)null);
+                    b.ToTable("Cotizacion", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Factura", b =>
@@ -125,7 +124,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<string>("CedulaCliente")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("Cedulacliente");
+                        .HasColumnName("CedulaCliente");
 
                     b.Property<string>("CorreoCliente")
                         .HasMaxLength(50)
@@ -142,20 +141,20 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasColumnType("character varying(250)")
                         .HasColumnName("NombreCliente");
 
-                    b.Property<int?>("Numero")
+                    b.Property<int>("Numero")
                         .HasColumnType("integer")
-                        .HasColumnName("numero");
+                        .HasColumnName("Numero");
 
                     b.Property<int>("ProcesoId")
                         .HasColumnType("integer")
-                        .HasColumnName("proid");
+                        .HasColumnName("ProcesoId");
 
                     b.HasKey("Id")
                         .HasName("factura_pkey");
 
                     b.HasIndex("ProcesoId");
 
-                    b.ToTable("factura", (string)null);
+                    b.ToTable("Factura", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Opcion", b =>
@@ -163,7 +162,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("Id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
@@ -175,7 +174,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.HasKey("Id")
                         .HasName("opciones_pkey");
 
-                    b.ToTable("opciones", (string)null);
+                    b.ToTable("Opcion", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Permiso", b =>
@@ -183,21 +182,21 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("per_id");
+                        .HasColumnName("PermisoId");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("OpcionId")
                         .HasColumnType("integer")
-                        .HasColumnName("op_id");
+                        .HasColumnName("OpcionesId");
 
                     b.Property<int>("UsuarioClienteId")
                         .HasColumnType("integer")
-                        .HasColumnName("usucli_id");
+                        .HasColumnName("UsuarioClienteId");
 
                     b.Property<int>("UsuarioNotariaId")
                         .HasColumnType("integer")
-                        .HasColumnName("usunot_id");
+                        .HasColumnName("UsuarioNotariaId");
 
                     b.HasKey("Id")
                         .HasName("permisos_pkey");
@@ -208,7 +207,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     b.HasIndex("UsuarioNotariaId");
 
-                    b.ToTable("permisos", (string)null);
+                    b.ToTable("Permiso", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Proceso", b =>
@@ -233,12 +232,12 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasColumnType("character varying(50)")
                         .HasColumnName("Estado");
 
-                    b.Property<DateOnly?>("FechaCreacion")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("FechaCreacion")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("FechaCreacion");
 
-                    b.Property<DateOnly?>("FechaFinalizacion")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("FechaFinalizacion")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("FechaFinalizacion");
 
                     b.Property<string>("Observacion")
@@ -263,7 +262,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     b.HasIndex("UsuarioClienteId");
 
-                    b.ToTable("proceso", (string)null);
+                    b.ToTable("Proceso", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.TipoProceso", b =>
@@ -283,7 +282,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.HasKey("Id")
                         .HasName("tipo_proceso_pkey");
 
-                    b.ToTable("tipo_proceso", (string)null);
+                    b.ToTable("TipoProceso", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.UsuarioCliente", b =>
@@ -330,10 +329,15 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasColumnType("character varying(50)")
                         .HasColumnName("Telefono");
 
+                    b.Property<string>("TokenRecovery")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("TokenRecovery");
+
                     b.HasKey("Id")
                         .HasName("usuario_cliente_pkey");
 
-                    b.ToTable("usuario_cliente", (string)null);
+                    b.ToTable("UsuarioCliente", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.UsuarioNotaria", b =>
@@ -370,103 +374,108 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasColumnType("character varying(50)")
                         .HasColumnName("Telefono");
 
+                    b.Property<string>("TokenRecovery")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("TokenRecovery");
+
                     b.HasKey("Id")
                         .HasName("usuario_notaria_pkey");
 
-                    b.ToTable("usuario_notaria", (string)null);
+                    b.ToTable("UsuarioNotaria", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Cotizacion", b =>
                 {
-                    b.HasOne("ProyectoLogin.Models.Proceso", "Pro")
-                        .WithMany("Cotizacions")
+                    b.HasOne("ProyectoLogin.Models.Proceso", "Proceso")
+                        .WithMany("Cotizaciones")
                         .HasForeignKey("ProcesoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_cotizaci_tener_proceso");
 
-                    b.HasOne("ProyectoLogin.Models.UsuarioNotaria", "Usunot")
-                        .WithMany("Cotizacions")
+                    b.HasOne("ProyectoLogin.Models.UsuarioNotaria", "UsuarioNotaria")
+                        .WithMany("Cotizaciones")
                         .HasForeignKey("UsuarioNotariaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_cotizaci_crea_usuario_");
 
-                    b.Navigation("Pro");
+                    b.Navigation("Proceso");
 
-                    b.Navigation("Usunot");
+                    b.Navigation("UsuarioNotaria");
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Factura", b =>
                 {
-                    b.HasOne("ProyectoLogin.Models.Proceso", "Pro")
+                    b.HasOne("ProyectoLogin.Models.Proceso", "Proceso")
                         .WithMany("Facturas")
                         .HasForeignKey("ProcesoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_factura_lleva_proceso");
 
-                    b.Navigation("Pro");
+                    b.Navigation("Proceso");
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Permiso", b =>
                 {
-                    b.HasOne("ProyectoLogin.Models.Opcion", "Op")
+                    b.HasOne("ProyectoLogin.Models.Opcion", "Opcion")
                         .WithMany("Permisos")
                         .HasForeignKey("OpcionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_permisos_permisos2_opciones");
 
-                    b.HasOne("ProyectoLogin.Models.UsuarioCliente", "Usucli")
+                    b.HasOne("ProyectoLogin.Models.UsuarioCliente", "UsuarioCliente")
                         .WithMany("Permisos")
                         .HasForeignKey("UsuarioClienteId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_permisos_permisos_usuario_");
 
-                    b.HasOne("ProyectoLogin.Models.UsuarioNotaria", "Usunot")
+                    b.HasOne("ProyectoLogin.Models.UsuarioNotaria", "UsuarioNotaria")
                         .WithMany("Permisos")
                         .HasForeignKey("UsuarioNotariaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_permisos_permisos3_usuario_");
 
-                    b.Navigation("Op");
+                    b.Navigation("Opcion");
 
-                    b.Navigation("Usucli");
+                    b.Navigation("UsuarioCliente");
 
-                    b.Navigation("Usunot");
+                    b.Navigation("UsuarioNotaria");
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Proceso", b =>
                 {
-                    b.HasOne("ProyectoLogin.Models.Archivo", "Arch")
+                    b.HasOne("ProyectoLogin.Models.Archivo", "Archivo")
                         .WithMany("Procesos")
                         .HasForeignKey("ArchivoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_proceso_tiene_archivo");
 
-                    b.HasOne("ProyectoLogin.Models.TipoProceso", "Tip")
+                    b.HasOne("ProyectoLogin.Models.TipoProceso", "TipoProceso")
                         .WithMany("Procesos")
                         .HasForeignKey("TipoProcesoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_proceso_es_tipo_pro");
 
-                    b.HasOne("ProyectoLogin.Models.UsuarioCliente", "Usucli")
+                    b.HasOne("ProyectoLogin.Models.UsuarioCliente", "UsuarioCliente")
                         .WithMany("Procesos")
                         .HasForeignKey("UsuarioClienteId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_proceso_relations_usuario_");
 
-                    b.Navigation("Arch");
+                    b.Navigation("Archivo");
 
-                    b.Navigation("Tip");
+                    b.Navigation("TipoProceso");
 
-                    b.Navigation("Usucli");
+                    b.Navigation("UsuarioCliente");
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Archivo", b =>
@@ -481,7 +490,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
             modelBuilder.Entity("ProyectoLogin.Models.Proceso", b =>
                 {
-                    b.Navigation("Cotizacions");
+                    b.Navigation("Cotizaciones");
 
                     b.Navigation("Facturas");
                 });
@@ -500,7 +509,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
             modelBuilder.Entity("ProyectoLogin.Models.UsuarioNotaria", b =>
                 {
-                    b.Navigation("Cotizacions");
+                    b.Navigation("Cotizaciones");
 
                     b.Navigation("Permisos");
                 });

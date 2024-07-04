@@ -5,6 +5,9 @@ using ProyectoLogin.Models;
 using ProyectoLogin.Services;
 using System.Security.Claims;
 
+
+
+
 namespace ProyectoLogin.Controllers
 {
 
@@ -49,6 +52,7 @@ namespace ProyectoLogin.Controllers
 
             // Encriptar contraseña y asignar URL de la imagen (si existe)
             usuario.Clave = Utilidades.EncriptarClave(usuario.Clave);
+            usuario.TokenRecovery = Utilidades.GenerarToken();
 
             // Guardar usuario
             UsuarioCliente usuarioCreado = await _usuarioClienteService.SaveUsuarioCliente(usuario);
@@ -79,7 +83,23 @@ namespace ProyectoLogin.Controllers
                 ViewData["Mensaje"] = "Correo o contraseña incorrectos";
                 return View();
             }
+            /*
+            Proceso proceso = new Proceso
+            {
+                TipoProcesoId = 1,
+                UsuarioClienteId = 1,
+                FechaCreacion = DateTime.UtcNow,  // Asegúrate de usar UTC
+                Estado = "En Progreso",
+                FechaFinalizacion = null,
+                Observacion = "Ninguna",
+                Envio = false
+            };
 
+            _context.Procesos.Add(proceso);
+
+            await _context.SaveChangesAsync();
+
+            */
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, usuarioEncontrado.Nombre)
@@ -101,8 +121,9 @@ namespace ProyectoLogin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult OlvidarContraseña()
+        public IActionResult OlvidarContraseña(string token)
         {
+            ViewBag.Token = token;
             return View();
         }
 
@@ -110,8 +131,62 @@ namespace ProyectoLogin.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> RestablecerContraseña(string correo)
+        {
+            UsuarioCliente user = await _usuarioClienteService.GetUsuarioClientePorCorreo(correo);
+            ViewBag.Correo = correo;
+            if (user != null)
+            {
+                bool respuesta = await _usuarioClienteService.ActualizarClave(user.TokenRecovery,user.Clave);
+                if (respuesta)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "Plantilla", "Restablecer.html");
+                    string content = await System.IO.File.ReadAllTextAsync(path);
 
+                    string scheme = Request.Scheme;
+                    string host = Request.Host.ToString();
+                    string url = $"{scheme}://{host}/Login/OlvidarContraseña?token={user.TokenRecovery}";
 
+                    string htmlBody = string.Format(content, user.Nombre, url);
 
+                    Correo correoDTO = new Correo()
+                    {
+                        Para = correo,
+                        Asunto = "Restablecer cuenta",
+                        Contenido = htmlBody
+                    };
+
+                    bool enviado = CorreoServicio.Enviar(correoDTO);
+                    ViewBag.Restablecido = true;
+                }
+            }
+            else
+            {
+                ViewBag.Mensaje = "No se encontraron coincidencias con el correo";
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OlvidarContraseña (string token, string clave, string confirmarClave)
+        {
+            ViewBag.Token = token;
+            if (clave != confirmarClave)
+            {
+                ViewBag.Mensaje = "Las contraseñas no coinciden";
+                return View();
+            }
+
+            bool respuesta = await _usuarioClienteService.ActualizarClave(token, Utilidades.EncriptarClave(clave));
+
+            if (respuesta)
+                ViewBag.Restablecido = true;
+            else
+                ViewBag.Mensaje = "No se pudo actualizar";
+
+            return View();
+        }
     }
 }

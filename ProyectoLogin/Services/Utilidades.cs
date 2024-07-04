@@ -23,5 +23,12 @@ namespace ProyectoLogin.Services
             return sb.ToString();
 
         }
+
+        public static string GenerarToken()
+        {
+            string token = Guid.NewGuid().ToString("N");
+            return token;
+        }
+
     }
 }

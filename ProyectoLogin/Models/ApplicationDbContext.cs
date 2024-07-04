@@ -41,6 +41,13 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.PersonaEntrega).HasColumnName("PersonaEntrega").HasMaxLength(50);
             entity.Property(e => e.FechaOtorgamiento).HasColumnName("FechaOtorgamiento");
             entity.Property(e => e.TipoActo).HasColumnName("TipoActo").HasMaxLength(250);
+
+            entity.Property(e => e.ProcesoId).HasColumnName("ProcesoId");
+            entity.HasOne(d => d.Proceso)
+                .WithMany()
+                .HasForeignKey(d => d.ProcesoId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_archivo_proceso");
         });
 
         modelBuilder.Entity<Cotizacion>(entity =>
@@ -132,7 +139,6 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("Proceso");
 
             entity.Property(e => e.Id).HasColumnName("Id").UseIdentityColumn();
-            entity.Property(e => e.ArchivoId).HasColumnName("ArchivoId");
             entity.Property(e => e.Envio).HasColumnName("Envio");
             entity.Property(e => e.Estado).HasColumnName("Estado").HasMaxLength(50);
             entity.Property(e => e.FechaCreacion).HasColumnName("FechaCreacion");
@@ -140,11 +146,6 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Observacion).HasColumnName("Observacion").HasMaxLength(300);
             entity.Property(e => e.TipoProcesoId).HasColumnName("TipoProcesoId");
             entity.Property(e => e.UsuarioClienteId).HasColumnName("UsuarioClienteId");
-
-            entity.HasOne(d => d.Archivo).WithMany(p => p.Procesos)
-                .HasForeignKey(d => d.ArchivoId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_proceso_tiene_archivo");
 
             entity.HasOne(d => d.TipoProceso).WithMany(p => p.Procesos)
                 .HasForeignKey(d => d.TipoProcesoId)
@@ -183,6 +184,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Direccion).HasColumnName("Direccion").HasMaxLength(250);
             entity.Property(e => e.Clave).HasColumnName("Clave").HasMaxLength(50);
             entity.Property(e => e.Cedula).HasColumnName("Cedula").HasMaxLength(50);
+            entity.Property(e => e.TokenRecovery).HasColumnName("TokenRecovery").HasMaxLength(200);
         });
 
         modelBuilder.Entity<UsuarioNotaria>(entity =>
@@ -197,6 +199,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Correo).HasColumnName("Correo").HasMaxLength(50);
             entity.Property(e => e.Telefono).HasColumnName("Telefono").HasMaxLength(50);
             entity.Property(e => e.Clave).HasColumnName("Clave").HasMaxLength(50);
+            entity.Property(e => e.TokenRecovery).HasColumnName("TokenRecovery").HasMaxLength(200);
         });
 
         base.OnModelCreating(modelBuilder);

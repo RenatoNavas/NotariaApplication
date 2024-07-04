@@ -29,9 +29,7 @@ namespace ProyectoLogin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>
-            AgregarArchivos(List<IFormFile>
-                documentos)
+        public async Task<IActionResult>AgregarArchivos(List<IFormFile> documentos)
         {
             foreach (var documento in documentos)
             {
@@ -46,6 +44,7 @@ namespace ProyectoLogin.Controllers
                     _context.Archivos.Add(archivo);
                 }
             }
+
 
             await _context.SaveChangesAsync();
 

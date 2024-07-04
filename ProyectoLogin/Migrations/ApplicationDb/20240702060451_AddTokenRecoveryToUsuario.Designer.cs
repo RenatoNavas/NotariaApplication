@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ProyectoLogin.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240702060451_AddTokenRecoveryToUsuario")]
+    partial class AddTokenRecoveryToUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,10 +52,6 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasColumnType("character varying(50)")
                         .HasColumnName("PersonaEntrega");
 
-                    b.Property<int>("ProcesoId")
-                        .HasColumnType("integer")
-                        .HasColumnName("ProcesoId");
-
                     b.Property<string>("Telefono")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
@@ -65,8 +64,6 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     b.HasKey("Id")
                         .HasName("archivo_pkey");
-
-                    b.HasIndex("ProcesoId");
 
                     b.ToTable("Archivo", (string)null);
                 });
@@ -222,6 +219,10 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ArchivoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("ArchivoId");
+
                     b.Property<bool?>("Envio")
                         .HasColumnType("boolean")
                         .HasColumnName("Envio");
@@ -254,6 +255,8 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
                     b.HasKey("Id")
                         .HasName("proceso_pkey");
+
+                    b.HasIndex("ArchivoId");
 
                     b.HasIndex("TipoProcesoId");
 
@@ -329,7 +332,7 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<string>("TokenRecovery")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
-                        .HasColumnName("TokenRecovery");
+                        .HasColumnName("token_recovery");
 
                     b.HasKey("Id")
                         .HasName("usuario_cliente_pkey");
@@ -374,24 +377,12 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<string>("TokenRecovery")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
-                        .HasColumnName("TokenRecovery");
+                        .HasColumnName("token_recovery");
 
                     b.HasKey("Id")
                         .HasName("usuario_notaria_pkey");
 
                     b.ToTable("UsuarioNotaria", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoLogin.Models.Archivo", b =>
-                {
-                    b.HasOne("ProyectoLogin.Models.Proceso", "Proceso")
-                        .WithMany()
-                        .HasForeignKey("ProcesoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_archivo_proceso");
-
-                    b.Navigation("Proceso");
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Cotizacion", b =>
@@ -459,6 +450,13 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
             modelBuilder.Entity("ProyectoLogin.Models.Proceso", b =>
                 {
+                    b.HasOne("ProyectoLogin.Models.Archivo", "Archivo")
+                        .WithMany("Procesos")
+                        .HasForeignKey("ArchivoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_proceso_tiene_archivo");
+
                     b.HasOne("ProyectoLogin.Models.TipoProceso", "TipoProceso")
                         .WithMany("Procesos")
                         .HasForeignKey("TipoProcesoId")
@@ -473,9 +471,16 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .IsRequired()
                         .HasConstraintName("fk_proceso_relations_usuario_");
 
+                    b.Navigation("Archivo");
+
                     b.Navigation("TipoProceso");
 
                     b.Navigation("UsuarioCliente");
+                });
+
+            modelBuilder.Entity("ProyectoLogin.Models.Archivo", b =>
+                {
+                    b.Navigation("Procesos");
                 });
 
             modelBuilder.Entity("ProyectoLogin.Models.Opcion", b =>

@@ -18,6 +18,22 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                 name: "TipAacto",
                 table: "Archivo",
                 newName: "TipoActo");
+
+            // Agregar el nuevo campo token_recovery a UsuarioCliente
+            migrationBuilder.AddColumn<string>(
+                name: "token_recovery",
+                table: "UsuarioCliente",
+                type: "character varying(200)",
+                maxLength: 200,
+                nullable: true);
+
+            // Agregar el nuevo campo token_recovery a UsuarioNotaria
+            migrationBuilder.AddColumn<string>(
+                name: "token_recovery",
+                table: "UsuarioNotaria",
+                type: "character varying(200)",
+                maxLength: 200,
+                nullable: true);
         }
 
         /// <inheritdoc />
@@ -31,6 +47,16 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                 name: "TipoActo",
                 table: "archivo",
                 newName: "TipAacto");
+
+            // Eliminar el campo token_recovery de UsuarioCliente
+            migrationBuilder.DropColumn(
+                name: "token_recovery",
+                table: "UsuarioCliente");
+
+            // Eliminar el campo token_recovery de UsuarioNotaria
+            migrationBuilder.DropColumn(
+                name: "token_recovery",
+                table: "UsuarioNotaria");
         }
     }
 }

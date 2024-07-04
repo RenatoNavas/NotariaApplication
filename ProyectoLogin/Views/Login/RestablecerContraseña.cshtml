@@ -55,22 +55,36 @@
                     <div class="card-body">
                         <div class="text-center mt-1">
                             <img src="~/img/images.jpeg" alt="Logo Notaría">
-                            <h4>Restablecer contraseña</h4>
+                            <h4>Has olvidado tu contraseña</h4>
+                            <br />
                         </div>
                         <form method="post" asp-controller="Login" asp-action="RestablecerContraseña">
                             <div class="form-group">
-                                <label for="clave"><span class="fa fa-lock"></span> Contraseña</label>
-                                <input type="password" class="form-control" id="clave" placeholder="Ingrese su nueva contraseña" required name="clave">
-                            </div>
-                            <div class="form-group">
-                                <label for="clave"><span class="fa fa-lock"></span> Confirmar Contraseña</label>
-                                <input type="password" class="form-control" id="nuevaClave" placeholder="Ingrese de nuevo su nueva contraseña" required name="clave">
+                                <label for="correo"><span class="fa fa-user"></span> Correo Electrónico</label>
+                                <input type="text" class="form-control" id="correo" placeholder="Ingrese su correo" required name="correo">
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary btn-block">Confirmar</button>
                             </div>
                             <br />
+                            <div class="text-center mt-2">
+                                ¿Ya tienes una cuenta? <a href="@Url.Action("IniciarSesion","Login")">Iniciar sesión</a>
+                            </div>
+                            <br />
                         </form>
+                        @if (ViewBag.Mensaje != null)
+                        {
+                            <div class="alert alert-danger">
+                                @ViewBag.Mensaje
+                            </div>
+                        }
+                        @if (ViewBag.Restablecido != null)
+                        {
+                            <div class="alert alert-success">
+                                <p>Su contraseña fue restablecida, le enviamos un mensaje a su correo para restablecer.</p>
+                                <a class="btn btn-success" href="@Url.Action("IniciarSesion","Login")">Ingresar</a>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

@@ -21,6 +21,8 @@ public partial class UsuarioCliente
 
     public string? Cedula { get; set; }
 
+    public string? TokenRecovery { get; set; }
+
     public virtual ICollection<Permiso> Permisos { get; set; } = new List<Permiso>();
 
     public virtual ICollection<Proceso> Procesos { get; set; } = new List<Proceso>();
