@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ProyectoLogin.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace ProyectoLogin.Controllers
 {
@@ -23,46 +24,51 @@ namespace ProyectoLogin.Controllers
 
         public async Task<IActionResult> Materializacion()
         {
-            var archivos = await _context.Archivos.ToListAsync();
+            var usuarioId = ObtenerUsuarioIdActual();
+
+            // Verificar si ya existe un proceso en curso para el usuario actual
+            var proceso = await _context.Procesos
+                .Where(p => p.UsuarioClienteId == usuarioId && p.FechaFinalizacion == null)
+                .FirstOrDefaultAsync();
+
+            // Si no existe, crear un nuevo proceso automáticamente
+            if (proceso == null)
+            {
+                proceso = CrearNuevoProceso(usuarioId);
+            }
+
+            // Obtener archivos relacionados con el proceso actual
+            var archivos = await _context.Archivos
+                .Where(a => a.ProcesoId == proceso.Id)
+                .ToListAsync();
+
             return View(archivos);
         }
 
         [HttpPost]
-        public async Task<IActionResult>AgregarArchivos(List<IFormFile> documentos)
-            AgregarArchivos(List<IFormFile>
-                documentos)
-            AgregarArchivos(List<IFormFile>
-                documentos)
-            AgregarArchivos(List<IFormFile>
-                documentos)
-            AgregarArchivos(List<IFormFile>
-                documentos)
-            AgregarArchivos(List<IFormFile>
-                documentos)
+        public async Task<IActionResult> AgregarArchivos(List<IFormFile> documentos)
         {
             foreach (var documento in documentos)
             {
                 if (documento != null && documento.Length > 0)
                 {
-                    // Generar un nombre único para el archivo
                     var fileName = Path.GetFileName(documento.FileName);
                     var filePath = Path.Combine(_storagePath, fileName);
 
-                    // Guardar el archivo en la ruta especificada
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await documento.CopyToAsync(stream);
                     }
 
-                    // Guardar solo el nombre del archivo en la base de datos
                     var archivo = new Archivo
                     {
-                        Documento = filePath,  // Guardar solo el nombre del archivo en la base de datos
+                        Documento = filePath,
+                        ProcesoId = ObtenerProcesoIdActual()
                     };
+
                     _context.Archivos.Add(archivo);
                 }
             }
-
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Materializacion));
@@ -85,6 +91,42 @@ namespace ProyectoLogin.Controllers
             }
 
             return RedirectToAction(nameof(Materializacion));
+        }
+
+        private int ObtenerUsuarioIdActual()
+        {
+            var usuarioId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            return usuarioId;
+        }
+
+        private int ObtenerProcesoIdActual()
+        {
+            var usuarioId = ObtenerUsuarioIdActual();
+
+            // Buscar el último proceso en curso del usuario actual
+            var proceso = _context.Procesos
+                .Where(p => p.UsuarioClienteId == usuarioId && p.FechaFinalizacion == null)
+                .OrderByDescending(p => p.FechaCreacion)
+                .FirstOrDefault();
+
+            return proceso != null ? proceso.Id : CrearNuevoProceso(usuarioId).Id;
+        }
+
+        private Proceso CrearNuevoProceso(int usuarioId)
+        {
+            var proceso = new Proceso
+            {
+                Estado = "En Progreso",
+                Observacion = "Ninguna",
+                FechaCreacion = DateTime.UtcNow,
+                TipoProcesoId = 1,  // Ajustar según el tipo de proceso deseado
+                UsuarioClienteId = usuarioId
+            };
+
+            _context.Procesos.Add(proceso);
+            _context.SaveChanges();
+
+            return proceso;
         }
     }
 }

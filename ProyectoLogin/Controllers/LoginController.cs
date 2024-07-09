@@ -5,20 +5,15 @@ using ProyectoLogin.Models;
 using ProyectoLogin.Services;
 using System.Security.Claims;
 
-
-
-
 namespace ProyectoLogin.Controllers
 {
-
     public class LoginController : Controller
     {
         private readonly IUsuarioClienteService _usuarioClienteService;
         private readonly ITipoProcesoService _tipoProcesoservice;
-
         private readonly ApplicationDbContext _context;
 
-        public LoginController(IUsuarioClienteService usuarioClienteService, ITipoProcesoService tipoProcesoservice ,ApplicationDbContext context)
+        public LoginController(IUsuarioClienteService usuarioClienteService, ITipoProcesoService tipoProcesoservice, ApplicationDbContext context)
         {
             _usuarioClienteService = usuarioClienteService;
             _tipoProcesoservice = tipoProcesoservice;
@@ -39,24 +34,17 @@ namespace ProyectoLogin.Controllers
                 return View(usuario);
             }
 
-            // Verificar si ya existe un correo electrónico registrado
             UsuarioCliente usuarioExistente = await _usuarioClienteService.GetUsuarioClientePorCorreo(usuario.Correo);
 
             if (usuarioExistente != null)
             {
                 ViewData["Mensaje"] = "Ya existe un usuario registrado con ese correo electrónico.";
-                return View(usuario); // Retornar vista con mensaje de error
+                return View(usuario);
             }
 
-            // Procesar la imagen si está presente
-
-            // Encriptar contraseña y asignar URL de la imagen (si existe)
             usuario.Clave = Utilidades.EncriptarClave(usuario.Clave);
             usuario.TokenRecovery = Utilidades.GenerarToken();
-
-            // Guardar usuario
             UsuarioCliente usuarioCreado = await _usuarioClienteService.SaveUsuarioCliente(usuario);
-
 
             if (usuarioCreado.Id > 0)
             {
@@ -66,7 +54,6 @@ namespace ProyectoLogin.Controllers
             ViewData["Mensaje"] = "No se pudo crear el usuario";
             return View(usuario);
         }
-
 
         public IActionResult IniciarSesion()
         {
@@ -83,28 +70,12 @@ namespace ProyectoLogin.Controllers
                 ViewData["Mensaje"] = "Correo o contraseña incorrectos";
                 return View();
             }
-            /*
-            Proceso proceso = new Proceso
-            {
-                TipoProcesoId = 1,
-                UsuarioClienteId = 1,
-                FechaCreacion = DateTime.UtcNow,  // Asegúrate de usar UTC
-                Estado = "En Progreso",
-                FechaFinalizacion = null,
-                Observacion = "Ninguna",
-                Envio = false
-            };
 
-            _context.Procesos.Add(proceso);
-
-            await _context.SaveChangesAsync();
-
-            */
             List<Claim> claims = new List<Claim>()
             {
+                new Claim(ClaimTypes.NameIdentifier, usuarioEncontrado.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuarioEncontrado.Nombre)
             };
-
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             AuthenticationProperties properties = new AuthenticationProperties()
@@ -131,6 +102,7 @@ namespace ProyectoLogin.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> RestablecerContraseña(string correo)
         {
@@ -138,7 +110,7 @@ namespace ProyectoLogin.Controllers
             ViewBag.Correo = correo;
             if (user != null)
             {
-                bool respuesta = await _usuarioClienteService.ActualizarClave(user.TokenRecovery,user.Clave);
+                bool respuesta = await _usuarioClienteService.ActualizarClave(user.TokenRecovery, user.Clave);
                 if (respuesta)
                 {
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "Plantilla", "Restablecer.html");
@@ -170,7 +142,7 @@ namespace ProyectoLogin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> OlvidarContraseña (string token, string clave, string confirmarClave)
+        public async Task<IActionResult> OlvidarContraseña(string token, string clave, string confirmarClave)
         {
             ViewBag.Token = token;
             if (clave != confirmarClave)
