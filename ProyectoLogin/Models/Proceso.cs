@@ -13,8 +13,21 @@ namespace ProyectoLogin.Models
 
         public bool? Envio { get; set; }
         public string? Estado { get; set; }
-        public DateTime? FechaCreacion { get; set; }
-        public DateTime? FechaFinalizacion { get; set; }
+
+        private DateTime? _fechaCreacion;
+        public DateTime? FechaCreacion
+        {
+            get => _fechaCreacion;
+            set => _fechaCreacion = value?.ToUniversalTime();
+        }
+
+        private DateTime? _fechaFinalizacion;
+        public DateTime? FechaFinalizacion
+        {
+            get => _fechaFinalizacion;
+            set => _fechaFinalizacion = value?.ToUniversalTime();
+        }
+
         public string? Observacion { get; set; }
         public int TipoProcesoId { get; set; }
         public int UsuarioClienteId { get; set; }

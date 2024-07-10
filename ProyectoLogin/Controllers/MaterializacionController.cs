@@ -128,5 +128,51 @@ namespace ProyectoLogin.Controllers
 
             return proceso;
         }
+
+        public async Task<IActionResult> GenerarProforma(bool envio, string direccion, string telefono, string personaEntrega)
+        {
+            var procesoId = ObtenerProcesoIdActual();
+            var proceso = await _context.Procesos.FindAsync(procesoId);
+
+            if (proceso != null)
+            {
+                try
+                {
+                    // Actualizar proceso con los datos de envío
+                    proceso.Envio = envio;
+                    _context.Entry(proceso).State = EntityState.Modified;
+
+                    // Obtener los archivos existentes del proceso
+                    var archivosExistentes = await _context.Archivos
+                        .Where(a => a.ProcesoId == procesoId)
+                        .ToListAsync();
+
+                    // Actualizar cada archivo con los nuevos datos
+                    foreach (var archivo in archivosExistentes)
+                    {
+                        archivo.Direccion = direccion;
+                        archivo.Telefono = telefono;
+                        archivo.PersonaEntrega = personaEntrega;
+                        _context.Entry(archivo).State = EntityState.Modified;
+                    }
+
+                    // Guardar los cambios
+                    await _context.SaveChangesAsync();
+
+                    TempData["Mensaje"] = "Su proforma está siendo generada, un funcionario se comunicará con usted.";
+                }
+                catch (DbUpdateException ex)
+                {
+                    // Capturar la excepción interna
+                    var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                    TempData["Error"] = $"Ocurrió un error al guardar los cambios: {errorMessage}";
+                }
+            }
+
+            return RedirectToAction(nameof(Materializacion));
+        }
+
+
+
     }
 }

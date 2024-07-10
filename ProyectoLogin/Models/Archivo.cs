@@ -14,7 +14,10 @@ namespace ProyectoLogin.Models
         public string? Direccion { get; set; }
         public string? Telefono { get; set; }
         public string? PersonaEntrega { get; set; }
-        public DateOnly? FechaOtorgamiento { get; set; }
+
+        // Usa DateTime en lugar de DateOnly temporalmente para pruebas
+        public DateTime? FechaOtorgamiento { get; set; }
+
         public string? TipoActo { get; set; }
 
         public int ProcesoId { get; set; }

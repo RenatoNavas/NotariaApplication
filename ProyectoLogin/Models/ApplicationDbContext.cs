@@ -39,7 +39,14 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Direccion).HasColumnName("Direccion").HasMaxLength(250);
             entity.Property(e => e.Telefono).HasColumnName("Telefono").HasMaxLength(50);
             entity.Property(e => e.PersonaEntrega).HasColumnName("PersonaEntrega").HasMaxLength(50);
-            entity.Property(e => e.FechaOtorgamiento).HasColumnName("FechaOtorgamiento");
+
+            entity.Property(e => e.FechaOtorgamiento)
+                  .HasColumnName("FechaOtorgamiento")
+                  .HasConversion(
+                      v => v.HasValue ? v.Value : (DateTime?)null,
+                      v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?)null
+                  );
+
             entity.Property(e => e.TipoActo).HasColumnName("TipoActo").HasMaxLength(250);
 
             entity.Property(e => e.ProcesoId).HasColumnName("ProcesoId");
@@ -141,8 +148,21 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("Id").UseIdentityColumn();
             entity.Property(e => e.Envio).HasColumnName("Envio");
             entity.Property(e => e.Estado).HasColumnName("Estado").HasMaxLength(50);
-            entity.Property(e => e.FechaCreacion).HasColumnName("FechaCreacion");
-            entity.Property(e => e.FechaFinalizacion).HasColumnName("FechaFinalizacion");
+
+            entity.Property(e => e.FechaCreacion)
+                  .HasColumnName("FechaCreacion")
+                  .HasConversion(
+                      v => v.HasValue ? v.Value : (DateTime?)null,
+                      v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?)null
+                  );
+
+            entity.Property(e => e.FechaFinalizacion)
+                  .HasColumnName("FechaFinalizacion")
+                  .HasConversion(
+                      v => v.HasValue ? v.Value : (DateTime?)null,
+                      v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?)null
+                  );
+
             entity.Property(e => e.Observacion).HasColumnName("Observacion").HasMaxLength(300);
             entity.Property(e => e.TipoProcesoId).HasColumnName("TipoProcesoId");
             entity.Property(e => e.UsuarioClienteId).HasColumnName("UsuarioClienteId");
