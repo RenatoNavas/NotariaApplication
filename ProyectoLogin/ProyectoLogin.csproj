@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="Views\Materializacion\Factura.cshtml" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Include="wwwroot\css\IniciarSesion.css" />
 	</ItemGroup>
 
@@ -29,6 +33,14 @@
 	<ItemGroup>
 		<Folder Include="Migrations\" />
 		<Folder Include="wwwroot\img\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Views\Materializacion\Factura.cshtml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="Views\Materializacion\Factura.cshtml" />
 	</ItemGroup>
 
 </Project>

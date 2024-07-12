@@ -112,7 +112,7 @@ namespace ProyectoLogin.Controllers
             return proceso != null ? proceso.Id : CrearNuevoProceso(usuarioId).Id;
         }
 
-        private Proceso CrearNuevoProceso(int usuarioId)
+        private Proceso CrearNuevoProceso(int usuarioId)     
         {
             var proceso = new Proceso
             {
@@ -160,6 +160,10 @@ namespace ProyectoLogin.Controllers
                     await _context.SaveChangesAsync();
 
                     TempData["Mensaje"] = "Su proforma está siendo generada, un funcionario se comunicará con usted.";
+                    TempData["ArchivosEnviados"] = true;  // Marcar que los archivos han sido enviados
+                    ViewBag.ProcesoId = procesoId;
+
+                    return RedirectToAction(nameof(Materializacion));
                 }
                 catch (DbUpdateException ex)
                 {
@@ -168,6 +172,18 @@ namespace ProyectoLogin.Controllers
                     TempData["Error"] = $"Ocurrió un error al guardar los cambios: {errorMessage}";
                 }
             }
+
+            return RedirectToAction(nameof(Materializacion));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GuardarFactura(Factura factura)
+        {
+            factura.ProcesoId = ObtenerProcesoIdActual();
+                _context.Facturas.Add(factura);
+                await _context.SaveChangesAsync();
+
+                TempData["Mensaje"] = "Factura guardada correctamente.";
 
             return RedirectToAction(nameof(Materializacion));
         }
