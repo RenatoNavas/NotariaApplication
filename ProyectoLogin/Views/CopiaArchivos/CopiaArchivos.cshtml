@@ -1,0 +1,31 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Copias de Archivos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Copias de Archivos</h1>
+        <h4 class="text-center">Por favor proporciona información de los actos notariales realizados</h4>
+
+        <form asp-action="GuardarActoNotarial" method="post" class="mt-4">
+            <div class="form-group">
+                <label for="NombreCompleto">Nombre Completo</label>
+                <input type="text" class="form-control" id="NombreCompleto" name="NombreCompleto" required>
+            </div>
+            <div class="form-group">
+                <label for="FechaOtorgamiento">Fecha de Otorgamiento</label>
+                <input type="date" class="form-control" id="FechaOtorgamiento" name="FechaOtorgamiento" required>
+            </div>
+            <div class="form-group">
+                <label for="TipoActo">Tipo de Acto</label>
+                <input type="text" class="form-control" id="TipoActo" name="TipoActo" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</body>
+</html>
