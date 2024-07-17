@@ -1,38 +1,7 @@
-﻿@model ProyectoLogin.Models.Archivo
-
-@{
-    ViewData["Title"] = "Agregar Archivo";
+﻿@{
+    ViewData["Title"] = "Copia de Archivos";
 }
 
-<h2>Agregar Archivo</h2>
+<h2>Copias de Archivos</h2>
 
-<form asp-action="AgregarArchivo" method="post">
-    <div class="form-group">
-        <label>Nombres y Apellidos</label>
-        <input asp-for="PersonaEntrega" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label>Fecha de Otorgamiento</label>
-        <input asp-for="FechaOtorgamiento" type="date" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label>Tipo de Acto</label>
-        <input asp-for="TipoActo" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Siguiente</button>
-</form>
-
-@section Scripts {
-    <script>
-        $('form').submit(function () {
-            if ($(this).valid()) {
-                var url = $(this).attr('action');
-                $.post(url, $(this).serialize(), function (data) {
-                    // Aquí puedes manejar la respuesta si es necesario
-                });
-            }
-            return false;
-        });
-    </script>
-}
+<p>Por favor proporciona información de los actos notariales realizados.</p>
