@@ -37,13 +37,15 @@ namespace ProyectoLogin.Controllers
                 proceso = CrearNuevoProceso(usuarioId);
             }
 
-            // Obtener archivos relacionados con el proceso actual (si los necesitas)
-            var archivos = await _context.Archivos
-                .Where(a => a.ProcesoId == proceso.Id)
-                .ToListAsync();
+            // Crear un nuevo objeto Archivo para pasarlo a la vista
+            var archivo = new Archivo
+            {
+                ProcesoId = proceso.Id  // Asignar el ProcesoId al nuevo archivo
+            };
 
-            return View(proceso); // Pasamos el proceso como modelo a la vista
+            return View(archivo); // Pasamos el archivo como modelo a la vista
         }
+
 
         private int ObtenerUsuarioIdActual()
         {
