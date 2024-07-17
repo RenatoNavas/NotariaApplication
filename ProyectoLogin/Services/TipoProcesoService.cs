@@ -21,6 +21,13 @@ namespace ProyectoLogin.Services
 
             return tipoProceso;
         }
+        public async Task<TipoProceso> GetTipoProcesoCopiaArchivos()
+        {
+            TipoProceso tipoProceso = await _context.TipoProcesos
+                .FirstOrDefaultAsync(tp => tp.Id == 2);
+
+            return tipoProceso;
+        }
 
     }
 }

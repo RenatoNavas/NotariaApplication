@@ -7,5 +7,7 @@ namespace ProyectoLogin.Services
     public interface ITipoProcesoService
     {
         Task<TipoProceso> GetTipoProcesoMaterializacion();
+        Task<TipoProceso> GetTipoProcesoCopiaArchivos();
+
     }
 }
