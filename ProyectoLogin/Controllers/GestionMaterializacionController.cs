@@ -25,6 +25,21 @@ namespace ProyectoLogin.Controllers
             return View(procesos);
         }
 
+        [HttpGet]
+        public IActionResult DescargarArchivo(string rutaArchivo)
+        {
+            if (System.IO.File.Exists(rutaArchivo))
+            {
+                var nombreArchivo = System.IO.Path.GetFileName(rutaArchivo);
+                var archivoBytes = System.IO.File.ReadAllBytes(rutaArchivo);
+                return File(archivoBytes, "application/octet-stream", nombreArchivo);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> SubirArchivo(int procesoId, IFormFile archivo)
         {
