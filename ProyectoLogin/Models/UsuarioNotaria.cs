@@ -26,4 +26,6 @@ public partial class UsuarioNotaria
     public virtual ICollection<Cotizacion> Cotizaciones { get; set; } = new List<Cotizacion>();
 
     public virtual ICollection<Permiso> Permisos { get; set; } = new List<Permiso>();
+
+    public string[] Roles { get; set; } = new string[0];
 }

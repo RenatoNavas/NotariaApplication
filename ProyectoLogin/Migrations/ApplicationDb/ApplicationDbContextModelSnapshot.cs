@@ -40,8 +40,8 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasColumnType("character varying(250)")
                         .HasColumnName("Documento");
 
-                    b.Property<DateOnly?>("FechaOtorgamiento")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("FechaOtorgamiento")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("FechaOtorgamiento");
 
                     b.Property<string>("PersonaEntrega")
@@ -52,6 +52,9 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                     b.Property<int>("ProcesoId")
                         .HasColumnType("integer")
                         .HasColumnName("ProcesoId");
+
+                    b.Property<int?>("ProcesoId1")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Telefono")
                         .HasMaxLength(50)
@@ -67,6 +70,8 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasName("archivo_pkey");
 
                     b.HasIndex("ProcesoId");
+
+                    b.HasIndex("ProcesoId1");
 
                     b.ToTable("Archivo", (string)null);
                 });
@@ -366,6 +371,10 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .HasColumnType("character varying(250)")
                         .HasColumnName("Nombre");
 
+                    b.Property<string>("Roles")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Telefono")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
@@ -390,6 +399,10 @@ namespace ProyectoLogin.Migrations.ApplicationDb
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_archivo_proceso");
+
+                    b.HasOne("ProyectoLogin.Models.Proceso", null)
+                        .WithMany("Archivos")
+                        .HasForeignKey("ProcesoId1");
 
                     b.Navigation("Proceso");
                 });
@@ -485,6 +498,8 @@ namespace ProyectoLogin.Migrations.ApplicationDb
 
             modelBuilder.Entity("ProyectoLogin.Models.Proceso", b =>
                 {
+                    b.Navigation("Archivos");
+
                     b.Navigation("Cotizaciones");
 
                     b.Navigation("Facturas");

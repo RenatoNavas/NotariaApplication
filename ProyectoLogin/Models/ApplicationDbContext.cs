@@ -207,6 +207,8 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.TokenRecovery).HasColumnName("TokenRecovery").HasMaxLength(200);
         });
 
+
+        // Configuración para UsuarioNotaria
         modelBuilder.Entity<UsuarioNotaria>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("usuario_notaria_pkey");
@@ -220,7 +222,15 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Telefono).HasColumnName("Telefono").HasMaxLength(50);
             entity.Property(e => e.Clave).HasColumnName("Clave").HasMaxLength(50);
             entity.Property(e => e.TokenRecovery).HasColumnName("TokenRecovery").HasMaxLength(200);
+
+            // Configuración de conversión para Roles
+            entity.Property(e => e.Roles)
+                  .HasConversion(
+                      v => string.Join(',', v),
+                      v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                  );
         });
+
 
         base.OnModelCreating(modelBuilder);
     }

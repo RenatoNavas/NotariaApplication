@@ -1,0 +1,102 @@
+﻿@model ProyectoLogin.Models.UsuarioNotaria
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Notaría 85</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <style>
+        body {
+            background-color: #e8f1f2;
+        }
+
+        .main {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .card {
+            border: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #00173d;
+            border-color: #00173d;
+        }
+
+        .form-control, .btn {
+            border-radius: 0;
+        }
+
+        .card img {
+            width: 50%;
+            height: auto;
+        }
+
+        .text-center h4 {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+
+        .admin-header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00173d;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container main">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center mt-1">
+                            <img src="~/img/images.jpeg" alt="Logo Notaría">
+                            <div class="admin-header">Administrador</div> 
+                            <div class="admin-header">Has olvidado tu contraseña</div>
+                            <br />
+                        </div>
+                        <form method="post" asp-controller="LoginNotaria" asp-action="RestablecerContraseña">
+                            <div class="form-group">
+                                <label for="correo"><span class="fa fa-user"></span> Correo Electrónico</label>
+                                <input type="text" class="form-control" id="correo" placeholder="Ingrese su correo" required name="correo">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-block">Confirmar</button>
+                            </div>
+                            <br />
+                            <div class="text-center mt-2">
+                                ¿Ya tienes una cuenta? <a href="@Url.Action("IniciarSesion","LoginNotaria")">Iniciar sesión</a>
+                            </div>
+                            <br />
+                        </form>
+                        @if (ViewBag.Mensaje != null)
+                        {
+                            <div class="alert alert-danger">
+                                @ViewBag.Mensaje
+                            </div>
+                        }
+                        @if (ViewBag.Restablecido != null)
+                        {
+                            <div class="alert alert-success">
+                                <p>Su contraseña fue restablecida, le enviamos un mensaje a su correo para restablecer.</p>
+                                <a class="btn btn-success" href="@Url.Action("IniciarSesion","Login")">Ingresar</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

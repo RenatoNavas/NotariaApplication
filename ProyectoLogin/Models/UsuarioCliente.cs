@@ -26,4 +26,5 @@ public partial class UsuarioCliente
     public virtual ICollection<Permiso> Permisos { get; set; } = new List<Permiso>();
 
     public virtual ICollection<Proceso> Procesos { get; set; } = new List<Proceso>();
+
 }

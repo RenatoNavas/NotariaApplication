@@ -1,0 +1,121 @@
+﻿@model Dictionary<ProyectoLogin.Models.Proceso, List<ProyectoLogin.Models.Archivo>>
+
+@{
+    ViewData["Title"] = "Gestión de Materialización";
+}
+
+<h2>Gestión de Materialización</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Estado</th>
+            <th>Fecha de Creación</th>
+            <th>Fecha de Finalización</th>
+            <th>Observación</th>
+            <th>Tipo de Proceso</th>
+            <th>Cliente</th>
+            <th>Archivos</th> <!-- Nueva columna para mostrar los archivos -->
+            <th>Acciones</th> <!-- Nueva columna para las acciones -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var proceso = item.Key;
+            var archivos = item.Value;
+
+            <tr>
+                <td>@proceso.Id</td>
+                <td>@proceso.Estado</td>
+                <td>@proceso.FechaCreacion?.ToString("dd/MM/yyyy")</td>
+                <td>@proceso.FechaFinalizacion?.ToString("dd/MM/yyyy")</td>
+                <td>@proceso.Observacion</td>
+                <td>@proceso.TipoProceso.Nombre</td>
+                <td>@proceso.UsuarioCliente.Nombre</td> <!-- Asumiendo que UsuarioCliente tiene una propiedad Nombre -->
+                <td>
+                    @if (archivos.Any())
+                    {
+                        <ul>
+                            @foreach (var archivo in archivos)
+                            {
+                                var nombreArchivo = System.IO.Path.GetFileName(archivo.Documento);
+                                <li>
+                                    <a href="@Url.Action("DescargarArchivo", "GestionMaterializacion", new { rutaArchivo = archivo.Documento })">
+                                        @nombreArchivo
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No hay archivos</span>
+                    }
+                </td>
+                <td>
+                    <!-- Botón para aceptar y abrir el modal -->
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAceptar" data-procesoid="@proceso.Id">Aceptar</button>
+
+                    <!-- Botón para cancelar -->
+                    <button type="button" class="btn btn-danger" onclick="cancelarProceso(@proceso.Id)">Cancelar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal para subir archivo -->
+<div class="modal fade" id="modalAceptar" tabindex="-1" role="dialog" aria-labelledby="modalAceptarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAceptarLabel">Subir Archivo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-controller="GestionMaterializacion" asp-action="SubirArchivo" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="hidden" id="ProcesoId" name="ProcesoId" value="" />
+                    <div class="form-group">
+                        <label for="archivo">Seleccione un archivo</label>
+                        <input type="file" class="form-control" id="archivo" name="archivo" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Agrega la referencia a jQuery y Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Para pasar el ID del proceso al modal
+    $('#modalAceptar').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Botón que abrió el modal
+        var procesoId = button.data('procesoid'); // Extraer información de los atributos data-*
+        var modal = $(this);
+        modal.find('#ProcesoId').val(procesoId);
+    });
+
+    // Función para cancelar el proceso
+    function cancelarProceso(procesoId) {
+        if (confirm('¿Está seguro de que desea cancelar este proceso?')) {
+            $.post('@Url.Action("CancelarProceso", "GestionMaterializacion")', { id: procesoId }, function (data) {
+                if (data.success) {
+                    location.reload(); // Recargar la página para reflejar los cambios
+                } else {
+                    alert('Error al cancelar el proceso.');
+                }
+            });
+        }
+    }
+</script>

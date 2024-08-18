@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,7 +8,6 @@
     <title>@ViewData["Title"] - ProyectoLogin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ProyectoLogin.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <style>
         body {
@@ -14,25 +15,32 @@
         }
 
         .navbar-custom {
-            background-color: #007bff; /* Azul similar al de la imagen */
+            background-color: #007bff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 20px;
+            height: 56px;
         }
 
         .sidebar {
-            min-height: 100vh;
-            background-color: #343a40; /* Gris oscuro */
+            width: 250px;
+            height: 100vh;
+            background-color: #343a40;
             padding: 15px;
             color: white;
-            transition: width 0.3s, padding 0.3s;
+            position: fixed;
+            top: 56px;
+            left: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 950;
         }
-
-            .sidebar.collapsed {
-                width: 60px;
-                overflow: hidden;
-                padding: 15px 0;
-            }
 
             .sidebar .nav-item {
                 margin-bottom: 10px;
@@ -42,20 +50,18 @@
                 color: white;
                 display: flex;
                 align-items: center;
+                width: 100%;
+                padding: 10px;
             }
 
                 .sidebar .nav-link i {
                     margin-right: 10px;
                 }
 
-            .sidebar.collapsed .nav-link i {
-                margin-right: 0;
-            }
-
-            .sidebar .nav-link:hover {
-                background-color: #495057;
-                color: white;
-            }
+                .sidebar .nav-link:hover {
+                    background-color: #495057;
+                    color: white;
+                }
 
             .sidebar .user-info {
                 text-align: center;
@@ -65,24 +71,12 @@
                 align-items: center;
             }
 
-            .sidebar.collapsed .user-info {
-                display: none;
-            }
-
-            .sidebar.collapsed .logo {
-                display: none;
-            }
-
-            .sidebar.collapsed .nav-link span {
-                display: none;
-            }
-
-            .sidebar .user-info img {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                margin-bottom: 10px;
-            }
+                .sidebar .user-info img {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    margin-bottom: 10px;
+                }
 
             .sidebar .logo img {
                 width: 150px;
@@ -93,35 +87,34 @@
                 margin-right: auto;
             }
 
-        .toggle-sidebar-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-
         .content {
-            transition: margin-left 0.3s;
-            margin-left: 250px; /* Initial width of the sidebar */
+            margin-left: 250px;
+            margin-top: 56px;
+            padding: 20px;
+            min-height: calc(100vh - 56px);
         }
 
-            .content.collapsed {
-                margin-left: 60px;
+        .logout-link {
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+            .logout-link i {
+                margin-right: 5px;
             }
     </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-custom">
-            <div class="container-fluid d-flex justify-content-between">
-                <button class="navbar-toggler toggle-sidebar-btn" type="button" onclick="toggleSidebar()">☰</button>
-                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="CerrarSesion">Cerrar Sesión</a>
-            </div>
+            <a class="logout-link nav-link text-white" asp-area="" asp-controller="Home" asp-action="CerrarSesion">
+                <i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span>
+            </a>
         </nav>
     </header>
     <div class="d-flex">
-        <div class="sidebar d-flex flex-column align-items-start" id="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="logo">
                 <img src="~/img/images.jpeg" alt="Logo Notaría">
             </div>
@@ -132,6 +125,11 @@
                 <a class="nav-link" href="#"><i class="fas fa-home"></i><span class="ml-2">Home</span></a>
                 <a asp-area="" asp-controller="Materializacion" asp-action="Materializacion" class="nav-link"><i class="fas fa-file-alt"></i><span class="ml-2">Materialización</span></a>
                 <a asp-area="" asp-controller="CopiaArchivos" asp-action="CopiaArchivos" class="nav-link"><i class="fas fa-file-alt"></i><span class="ml-2">Copia de Archivos</span></a>
+
+                <a asp-area="" asp-controller="Usuario" asp-action="Usuario" class="nav-link"><i class="fas fa-user"></i><span class="ml-2">Gestión de Usuarios</span></a>
+                <a asp-area="" asp-controller="GestionMaterializacion" asp-action="GestionMaterializacion" class="nav-link"><i class="fas fa-user"></i><span class="ml-2">Gestion Materializacion</span></a>
+                <a asp-area="" asp-controller="GestionCopiaArchivo" asp-action="GestionCopiaArchivo" class="nav-link"><i class="fas fa-user"></i><span class="ml-2">Gestion Materializacion</span></a>
+
             </nav>
         </div>
         <div class="content flex-grow-1 p-3" id="content">
@@ -147,11 +145,5 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-            document.getElementById('content').classList.toggle('collapsed');
-        }
-    </script>
 </body>
 </html>

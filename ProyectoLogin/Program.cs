@@ -24,7 +24,9 @@ namespace ProyectoLogin
                 o.UseNpgsql(builder.Configuration.GetConnectionString("CadenaSQL"));
             });
             builder.Services.AddScoped<IUsuarioClienteService, UsuarioClienteService>();
+            builder.Services.AddScoped<IUsuarioNotariaService, UsuarioNotariaService>();
             builder.Services.AddScoped<IFilesService, FilesService>();
+            builder.Services.AddScoped<IProcesoService, ProcesoService>();
             builder.Services.AddScoped<ITipoProcesoService, TipoProcesoService>();
             builder.Services.AddScoped<IArchivoService, ArchivoService>();
             builder.Services.AddScoped<ICotizacionService, CotizacionService>();
