@@ -1,9 +1,69 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notaria 85 de Quito</title>
+    <style>
+        
+        *{
+            margin:0px;
+            padding:0px;
+            box-sizing: border-box;
 
-<div class="text-center">
-    <h1 class="display-4">Welcome @ViewData["nombreUsuario"]</h1>
-    <img src="@ViewData["fotoPerfil"]" alt="Foto de perfil" style="width:200px;height:200px;border-radius:50%" />
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        }
+        .background{
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+            .background::before {
+                content: '';
+                background-image: url('/img/notaria.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                z-index: -1; /* Asegura que el fondo esté detrás del contenido */
+            }
+       
+
+        .text-section {
+            flex: 1;
+            padding-right: 20px;
+            color: black;
+            font-weight: bold;
+
+        }
+
+            .text-section h1 {
+                margin: 0;
+                font-size: 2.5em;
+            }
+
+            .text-section p {
+                margin-top: 10px;
+                font-size: 1.2em;
+            }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="text-section">
+            <h1>Sistema Notarial</h1>
+            <span>Seleccione su proceso</span>
+            <p>En la parte izquierda puede seleccionar el servicio que desea solicitar.</p>
+        </div>
+        <div class="image-section">
+            <img src="~/img/contactos.png" alt="">
+        </div>
+    </div>
+</body>
+</html>
