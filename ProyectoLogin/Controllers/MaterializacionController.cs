@@ -183,7 +183,7 @@ namespace ProyectoLogin.Controllers
                 _context.Facturas.Add(factura);
                 await _context.SaveChangesAsync();
 
-                TempData["Mensaje"] = "Factura guardada correctamente. Un funcionario se comunicará con usted para confirmar el envío";
+                TempData["Mensaje"] = "Factura guardada correctamente. Un funcionario se comunicará con usted para confirmar el envío de los documentos";
 
             return RedirectToAction(nameof(Materializacion));
         }
