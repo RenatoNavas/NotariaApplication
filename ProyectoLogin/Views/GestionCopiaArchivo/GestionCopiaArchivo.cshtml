@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<ProyectoLogin.Models.Proceso>
 
 @{
-    ViewData["Title"] = "Gestión de Materialización";
+    ViewData["Title"] = "Gestión de Copias de Archivo";
 }
 
-<h2>Gestión de Materialización</h2>
+<h2>Gestión de Copias de Archivo</h2>
 
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">
@@ -52,7 +52,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" asp-controller="GestionMaterializacion" asp-action="SubirArchivo" enctype="multipart/form-data">
+            <form method="post" asp-controller="GestionCopiaArchivo" asp-action="SubirArchivo" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="hidden" id="ProcesoId" name="ProcesoId" value="" />
                     <div class="form-group">
@@ -69,6 +69,10 @@
     </div>
 </div>
 
+<!-- Agrega la referencia a jQuery y Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 <script>
     // Para pasar el ID del proceso al modal
     $('#modalAceptar').on('show.bs.modal', function (event) {
@@ -81,7 +85,7 @@
     // Función para cancelar el proceso
     function cancelarProceso(procesoId) {
         if (confirm('¿Está seguro de que desea cancelar este proceso?')) {
-            $.post('@Url.Action("CancelarProceso", "GestionMaterializacion")', { id: procesoId }, function (data) {
+            $.post('@Url.Action("CancelarProceso", "GestionCopiaArchivo")', { id: procesoId }, function (data) {
                 if (data.success) {
                     location.reload(); // Recargar la página para reflejar los cambios
                 } else {

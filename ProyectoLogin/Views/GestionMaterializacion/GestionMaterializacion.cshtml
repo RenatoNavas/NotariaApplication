@@ -9,13 +9,12 @@
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">
         <tr>
-            <th>ID</th>
+            <th>Cliente</th>
+            <th>Teléfono</th>
             <th>Estado</th>
             <th>Fecha de Creación</th>
             <th>Fecha de Finalización</th>
             <th>Observación</th>
-            <th>Tipo de Proceso</th>
-            <th>Cliente</th>
             <th>Archivos</th> <!-- Nueva columna para mostrar los archivos -->
             <th>Acciones</th> <!-- Nueva columna para las acciones -->
         </tr>
@@ -27,13 +26,12 @@
             var archivos = item.Value;
 
             <tr>
-                <td>@proceso.Id</td>
+                <td>@proceso.UsuarioCliente.Nombre</td>
+                <td>@proceso.UsuarioCliente.Telefono</td>
                 <td>@proceso.Estado</td>
                 <td>@proceso.FechaCreacion?.ToString("dd/MM/yyyy")</td>
                 <td>@proceso.FechaFinalizacion?.ToString("dd/MM/yyyy")</td>
                 <td>@proceso.Observacion</td>
-                <td>@proceso.TipoProceso.Nombre</td>
-                <td>@proceso.UsuarioCliente.Nombre</td> <!-- Asumiendo que UsuarioCliente tiene una propiedad Nombre -->
                 <td>
                     @if (archivos.Any())
                     {
@@ -55,12 +53,20 @@
                     }
                 </td>
                 <td>
-                    <!-- Botón para aceptar y abrir el modal -->
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAceptar" data-procesoid="@proceso.Id">Aceptar</button>
+                    @if (proceso.Estado != "Cancelado")
+                    {
+                        <!-- Botón para aceptar y abrir el modal -->
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAceptar" data-procesoid="@proceso.Id">Aceptar</button>
 
-                    <!-- Botón para cancelar -->
-                    <button type="button" class="btn btn-danger" onclick="cancelarProceso(@proceso.Id)">Cancelar</button>
+                        <!-- Botón para cancelar -->
+                        <button type="button" class="btn btn-danger" onclick="cancelarProceso(@proceso.Id)">Cancelar</button>
+                    }
+                    else
+                    {
+                        <span>Proceso Cancelado - Estado: @proceso.Estado</span>
+                    }
                 </td>
+
             </tr>
         }
     </tbody>

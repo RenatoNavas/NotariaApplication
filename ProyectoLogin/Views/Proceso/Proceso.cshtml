@@ -1,0 +1,104 @@
+﻿@model Dictionary<ProyectoLogin.Models.Proceso, List<ProyectoLogin.Models.Cotizacion>>
+
+@{
+    ViewData["Title"] = "Mis Procesos";
+}
+
+<h2>Mis Procesos</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Cliente</th>
+            <th>Tipo de Proceso</th>
+            <th>Estado del Proceso</th>
+            <th>Fecha de Creación</th>
+            <th>Fecha de Finalización</th>
+            <th>Observación</th>
+            <th>Proforma</th> <!-- Nueva columna para mostrar las cotizaciones -->
+            <th>Acciones</th> <!-- Nueva columna para acciones -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var proceso = item.Key;
+            var cotizaciones = item.Value;
+
+            <tr>
+                <td>@proceso.UsuarioCliente.Nombre</td>
+                <td>@proceso.TipoProceso?.Nombre</td> <!-- Asumiendo que TipoProceso tiene una propiedad Nombre -->
+                <td>@proceso.Estado</td>
+                <td>@proceso.FechaCreacion?.ToString("dd/MM/yyyy")</td>
+                <td>@proceso.FechaFinalizacion?.ToString("dd/MM/yyyy")</td>
+                <td>@proceso.Observacion</td>
+                <td>
+                    @if (cotizaciones.Any())
+                    {
+                        <ul>
+                            @foreach (var cotizacion in cotizaciones)
+                            {
+                                <li>
+                                    <strong>Fecha:</strong> @cotizacion.Fecha?.ToString("dd/MM/yyyy") <br />
+                                    <strong>Proforma:</strong>
+                                    @if (!string.IsNullOrEmpty(cotizacion.Documento))
+                                    {
+                                        var nombreArchivo = System.IO.Path.GetFileName(cotizacion.Documento);
+                                        <a href="@Url.Action("DescargarArchivo", "Proceso", new { rutaArchivo = cotizacion.Documento })">
+                                            @nombreArchivo
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span>No hay documento asociado</span>
+                                    }
+                                    <br />
+                                    <strong>Funcionario:</strong> @cotizacion.UsuarioNotaria?.Nombre <br /> <!-- Mostrar el nombre del UsuarioNotaria -->
+                                    <strong>Teléfono:</strong> @cotizacion.UsuarioNotaria?.Telefono <!-- Mostrar el teléfono del UsuarioNotaria -->
+                                </li>
+                                <hr />
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No hay cotizaciones</span>
+                    }
+                </td>
+                <td>
+                        <button type="button" class="btn btn-success" onclick="aceptarProforma(@proceso.Id)">Aceptar Proforma</button>
+                        <button type="button" class="btn btn-danger" onclick="rechazarProforma(@proceso.Id)">Rechazar Proforma</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function aceptarProforma(procesoId) {
+        if (confirm('¿Está seguro de que desea aceptar esta proforma?')) {
+            $.post('@Url.Action("AceptarProforma", "Proceso")', { id: procesoId }, function (data) {
+                if (data.success) {
+                    alert('Proforma aceptada');
+                    location.reload(); // Recargar la página para reflejar los cambios
+                } else {
+                    alert('Error al aceptar la proforma.');
+                }
+            });
+        }
+    }
+
+    function rechazarProforma(procesoId) {
+        if (confirm('¿Está seguro de que desea rechazar esta proforma?')) {
+            $.post('@Url.Action("RechazarProforma", "Proceso")', { id: procesoId }, function (data) {
+                if (data.success) {
+                    alert('Proforma rechazada');
+                    location.reload(); // Recargar la página para reflejar los cambios
+                } else {
+                    alert('Error al rechazar la proforma.');
+                }
+            });
+        }
+    }
+</script>

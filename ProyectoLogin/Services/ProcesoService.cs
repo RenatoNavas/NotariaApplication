@@ -73,6 +73,48 @@ namespace ProyectoLogin.Services
 
             return true;
         }
+        public async Task<bool> ActualizarEstadoProceso(int procesoId, string nuevoEstado)
+        {
+            var proceso = await _context.Procesos.FindAsync(procesoId);
+            if (proceso == null)
+            {
+                return false;
+            }
 
+            proceso.Estado = nuevoEstado;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<Dictionary<Proceso, List<Cotizacion>>> ObtenerProcesosConCotizacionesPorUsuario(int usuarioClienteId)
+        {
+            // Obtén todos los procesos que pertenecen al usuario específico
+            var procesos = await _context.Procesos
+                                         .Where(p => p.UsuarioClienteId == usuarioClienteId)
+                                         .Include(p => p.TipoProceso)
+                                         .Include(p => p.UsuarioCliente)
+                                         .ToListAsync();
+
+            // Obtén todas las cotizaciones correspondientes a esos procesos
+            var cotizaciones = await _context.Cotizaciones
+                                             .Where(c => procesos.Select(p => p.Id).Contains(c.ProcesoId))
+                                             .Include(c => c.UsuarioNotaria)  // Incluye la información del UsuarioNotaria
+                                             .ToListAsync();
+
+            // Crear un diccionario para almacenar los procesos y sus cotizaciones
+            var procesosConCotizaciones = new Dictionary<Proceso, List<Cotizacion>>();
+
+            // Asignar las cotizaciones correspondientes a cada proceso en el diccionario
+            foreach (var proceso in procesos)
+            {
+                var cotizacionesProceso = cotizaciones.Where(c => c.ProcesoId == proceso.Id).ToList();
+                procesosConCotizaciones.Add(proceso, cotizacionesProceso);
+            }
+
+            return procesosConCotizaciones;
+        }
     }
+
 }
+

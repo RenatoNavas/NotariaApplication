@@ -122,14 +122,24 @@
                 <p>Bienvenido @ViewData["nombreUsuario"]</p>
             </div>
             <nav class="nav flex-column">
+                @if (!User.IsInRole("Administrador") && !User.IsInRole("Manager"))
+                {
                 <a class="nav-link" href="#"><i class="fas fa-home"></i><span class="ml-2">Home</span></a>
-                <a asp-area="" asp-controller="Materializacion" asp-action="Materializacion" class="nav-link"><i class="fas fa-file-alt"></i><span class="ml-2">Materialización</span></a>
+                <a asp-area="" asp-controller="Proceso" asp-action="Proceso" class="nav-link"><i class="fas fa-file"></i><span class="ml-2">Mis Procesos</span></a>
+                <a asp-area="" asp-controller="Materializacion" asp-action="Materializacion" class="nav-link"><i class="fas fa-file-contract"></i><span class="ml-2">Materialización</span></a>
                 <a asp-area="" asp-controller="CopiaArchivos" asp-action="CopiaArchivos" class="nav-link"><i class="fas fa-file-alt"></i><span class="ml-2">Copia de Archivos</span></a>
-
+                }
+                
+                @if (User.IsInRole("Administrador"))
+                {
                 <a asp-area="" asp-controller="Usuario" asp-action="Usuario" class="nav-link"><i class="fas fa-user"></i><span class="ml-2">Gestión de Usuarios</span></a>
-                <a asp-area="" asp-controller="GestionMaterializacion" asp-action="GestionMaterializacion" class="nav-link"><i class="fas fa-user"></i><span class="ml-2">Gestion Materializacion</span></a>
-                <a asp-area="" asp-controller="GestionCopiaArchivo" asp-action="GestionCopiaArchivo" class="nav-link"><i class="fas fa-user"></i><span class="ml-2">Gestion de Copias de Archivo</span></a>
+                }
 
+                @if (User.IsInRole("Administrador") || User.IsInRole("Manager"))
+                {
+                    <a asp-area="" asp-controller="GestionMaterializacion" asp-action="GestionMaterializacion" class="nav-link"><i class="fas fa-folder"></i><span class="ml-2">Gestion Materializacion</span></a>
+                    <a asp-area="" asp-controller="GestionCopiaArchivo" asp-action="GestionCopiaArchivo" class="nav-link"><i class="fas fa-folder-plus"></i><span class="ml-2">Gestion de Copias de Archivo</span></a>
+                }
             </nav>
         </div>
         <div class="content flex-grow-1 p-3" id="content">
