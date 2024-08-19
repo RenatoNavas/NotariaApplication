@@ -10,109 +10,183 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .form-group-custom {
+            margin-bottom: 15px;
+        }
+
+            .form-group-custom label {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        .card-header {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .shadow-lg {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-center {
+            justify-content: center;
+        }
+
+        .align-items-start {
+            align-items: flex-start;
+        }
+
+        .bg-primary {
+            background-color: #007bff;
+        }
+
+        .text-white {
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-    <h2>Copias de Archivos</h2>
-
-    <p>Por favor proporciona información de los actos notariales realizados.</p>
-
-    <div>
-        <form id="informacionArchivosForm" method="post">
-            <input type="hidden" name="ProcesoId" value="@ViewBag.ProcesoId" />
-            <div class="form-group">
-                <label for="PersonaEntrega">Nombre Completo:</label>
-                <input type="text" class="form-control" id="PersonaEntrega" name="PersonaEntrega" required>
+    <div class="container" style="max-width: 1000px; margin-top: 50px;">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>Copias de Archivos</h2>
             </div>
-            <div class="form-group">
-                <label for="FechaOtorgamiento">Fecha de Otorgamiento:</label>
-                <input type="date" class="form-control" id="FechaOtorgamiento" name="FechaOtorgamiento" required>
-            </div>
-            <div class="form-group">
-                <label for="TipoActo">Tipo de Acto:</label>
-                <input type="text" class="form-control" id="TipoActo" name="TipoActo" required>
-            </div>
-            <button type="button" class="btn btn-secondary" id="submitBtn">Siguiente</button>
-        </form>
+            <div class="card-body">
+                <p>Por favor proporciona información de los actos notariales realizados.</p>
 
-        <!-- Modal -->
-        <div class="modal fade" id="proformaModal" tabindex="-1" role="dialog" aria-labelledby="proformaModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="proformaModalLabel">Opciones de Envío</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <form id="informacionArchivosForm" method="post">
+                    <input type="hidden" name="ProcesoId" value="@ViewBag.ProcesoId" />
+                    <div class="form-group-custom">
+                        <label for="PersonaEntrega">Nombre Completo:</label>
+                        <input type="text" class="form-control" id="PersonaEntrega" name="PersonaEntrega" required>
                     </div>
-                    <div class="modal-body">
-                        <form id="proformaForm" method="post">
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="envio" id="retiroNotaria" value="false" checked>
-                                    <label class="form-check-label" for="retiroNotaria">
-                                        Retirar en la notaría
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="envio" id="envioServientrega" value="true">
-                                    <label class="form-check-label" for="envioServientrega">
-                                        Enviar por ServiEntrega
-                                    </label>
-                                </div>
-                            </div>
+                    <div class="form-group-custom">
+                        <label for="FechaOtorgamiento">Fecha de Otorgamiento:</label>
+                        <input type="date" class="form-control" id="FechaOtorgamiento" name="FechaOtorgamiento" required>
+                    </div>
+                    <div class="form-group-custom">
+                        <label for="TipoActo">Tipo de Acto:</label>
+                        <input type="text" class="form-control" id="TipoActo" name="TipoActo" required>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-block" id="submitBtn">Siguiente</button>
+                </form>
 
-                            <div id="direccionNotaria" class="form-group">
-                                <label>Dirección de la notaría: Av. Ejemplo 123, Ciudad</label>
+                <!-- Modal -->
+                <div class="modal fade" id="proformaModal" tabindex="-1" role="dialog" aria-labelledby="proformaModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="proformaModalLabel">Opciones de Envío</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
+                            <div class="modal-body">
+                                <form id="proformaForm" method="post">
+                                    <div class="form-group-custom">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="envio" id="retiroNotaria" value="false" checked>
+                                            <label class="form-check-label" for="retiroNotaria">
+                                                Retirar en la notaría
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="envio" id="envioServientrega" value="true">
+                                            <label class="form-check-label" for="envioServientrega">
+                                                Enviar por ServiEntrega
+                                            </label>
+                                        </div>
+                                    </div>
 
-                            <div id="envioForm" class="form-group" style="display: none;">
-                                <div class="form-group">
-                                    <label for="personaEntrega">Nombres:</label>
-                                    <input type="text" class="form-control" id="personaEntrega" name="personaEntrega">
-                                </div>
-                                <div class="form-group">
-                                    <label for="direccion">Dirección:</label>
-                                    <input type="text" class="form-control" id="direccion" name="direccion">
-                                </div>
-                                <div class="form-group">
-                                    <label for="telefono">Teléfono:</label>
-                                    <input type="text" class="form-control" id="telefono" name="telefono">
-                                </div>
+                                    <div id="direccionNotaria" class="form-group-custom">
+                                        <label>Dirección de la notaría: Calle Lola Quintana y Polit Lasso, Edif. de la Congregación Santa mariana de Jesús local 39, diagonal al parque Central</label>
+                                    </div>
+
+                                    <div id="envioForm" class="form-group-custom" style="display: none;">
+                                        <div class="form-group-custom">
+                                            <label for="personaEntrega">Nombres:</label>
+                                            <input type="text" class="form-control" id="personaEntrega" name="personaEntrega">
+                                        </div>
+                                        <div class="form-group-custom">
+                                            <label for="direccion">Dirección:</label>
+                                            <input type="text" class="form-control" id="direccion" name="direccion">
+                                        </div>
+                                        <div class="form-group-custom">
+                                            <label for="telefono">Teléfono:</label>
+                                            <input type="text" class="form-control" id="telefono" name="telefono">
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-primary btn-block" id="generarProformaBtn">Generar Proforma</button>
+                                </form>
                             </div>
-
-                            <button type="button" class="btn btn-primary" id="generarProformaBtn">Generar Proforma</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div id="facturaFormDiv" style="display: none;">
-            <h2>Datos para la Factura</h2>
-            <form id="facturaForm" method="post" asp-action="GuardarFactura">
-                <input type="hidden" name="ProcesoId" value="@ViewBag.ProcesoId" />
-                <div class="form-group">
-                    <label for="NombreCliente">Nombre Completo:</label>
-                    <input type="text" class="form-control" id="NombreCliente" name="NombreCliente" required>
+                <div id="facturaFormDiv" style="display: none;">
+                    <h2>Datos para la Factura</h2>
+                    <form id="facturaForm" method="post" asp-action="GuardarFactura">
+                        <input type="hidden" name="ProcesoId" value="@ViewBag.ProcesoId" />
+                        <div class="form-group-custom">
+                            <label for="NombreCliente">Nombre Completo:</label>
+                            <input type="text" class="form-control" id="NombreCliente" name="NombreCliente" required>
+                        </div>
+                        <div class="form-group-custom">
+                            <label for="CedulaCliente">Número de Cédula:</label>
+                            <input type="text" class="form-control" id="CedulaCliente" name="CedulaCliente" required>
+                        </div>
+                        <div class="form-group-custom">
+                            <label for="CorreoCliente">Correo Electrónico:</label>
+                            <input type="email" class="form-control" id="CorreoCliente" name="CorreoCliente" required>
+                        </div>
+                        <div class="form-group-custom">
+                            <label for="DireccionCliente">Dirección:</label>
+                            <input type="text" class="form-control" id="DireccionCliente" name="DireccionCliente" required>
+                        </div>
+                        <div class="form-group-custom">
+                            <label for="Numero">Número de Teléfono:</label>
+                            <input type="text" class="form-control" id="Numero" name="Numero" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Guardar Factura</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="CedulaCliente">Número de Cédula:</label>
-                    <input type="text" class="form-control" id="CedulaCliente" name="CedulaCliente" required>
-                </div>
-                <div class="form-group">
-                    <label for="CorreoCliente">Correo Electrónico:</label>
-                    <input type="email" class="form-control" id="CorreoCliente" name="CorreoCliente" required>
-                </div>
-                <div class="form-group">
-                    <label for="DireccionCliente">Dirección:</label>
-                    <input type="text" class="form-control" id="DireccionCliente" name="DireccionCliente" required>
-                </div>
-                <div class="form-group">
-                    <label for="Numero">Número de Teléfono:</label>
-                    <input type="text" class="form-control" id="Numero" name="Numero" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Guardar Factura</button>
-            </form>
+            </div>
         </div>
     </div>
 
